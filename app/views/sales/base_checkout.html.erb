@@ -29,7 +29,7 @@
           </tr>
           <tr class="table-secondary">
             <td>ETH Cost</td>
-            <td><%= (gas_price * (250000 + 21000) * 1e-9).truncate(6) %></td>
+            <td><%= (gas_price * ENV["GAS_TO_CHARGE"] * 1e-9).truncate(6) %></td>
           </tr>
         </tbody>
       </table>

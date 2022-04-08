@@ -32,8 +32,8 @@ module NowPayments
     #     "cancel_url": "https://nowpayments.io"
     # }
     def post_params
-      # :price_amount     => @price_amount,
-      { :price_amount     => 59,
+      {
+        :price_amount     => @price_amount,
         :price_currency   => 'USD',
         :order_id         => "NP_ORDER_#{@item.order_id}",
         :ipn_callback_url => ENV["NP_CALLBACK_URL"],
