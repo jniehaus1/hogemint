@@ -16,6 +16,7 @@
     <div id="card-stats">
       <div id="card-mint-date" class="card-stat" stat="<%= @item.created_at.strftime("%Y-%m-%d") %>">Mint Date: </div>
       <div id="card-generation" class="card-stat" stat="<%= @item.generation.capitalize %>">Generation: </div>
+      <div><%= processing_html(@item) %></div>
     </div>
     <div>
       <% if @item.can_remint? %>
@@ -29,7 +30,6 @@
 <script type="text/javascript">
     (function() {
         // Tilt effect
-
         // Init
         var container = document.querySelector("#card-controller");
         var inner = document.querySelector("#card-sleeve");

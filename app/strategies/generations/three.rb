@@ -11,5 +11,9 @@ module Generations
     def generate_card
       Vips::Compile.new(@item).preview
     end
+
+    def run_after_create
+      GalaxyWorker.perform_in(5.seconds, @item.id)
+    end
   end
 end

@@ -55,5 +55,7 @@ module Generations
       @item.errors.add(:base, "You must provide an image")
       throw(:abort)
     end
+
+    def run_after_create; end
   end
 end

@@ -10,7 +10,7 @@ module Vips
       target_size = 466 # Take from template
 
       scale = [target_size.to_f / meme_image.width, target_size.to_f / meme_image.height].min
-      meme_image = meme_image.resize(scale, kernel: :nearest) # resize to fit a inside target_size by target_size box
+      meme_image = meme_image.resize(scale, kernel: :cubic) # resize to fit a inside target_size by target_size box
       rgba = meme_image.bandjoin(255)
       x_coord = ((451 - rgba.width) / 2) + 86
       y_coord = ((466 - rgba.height) / 2) + 188
@@ -41,7 +41,7 @@ module Vips
       end
 
       newgif = Vips::Image.arrayjoin(pages, { across: 1 })
-      newgif.write_to_buffer ".gif", optimize_gif_frames: true, optimize_gif_transparency: true, format: "gif"
+      StringIO.new(newgif.write_to_buffer ".gif", optimize_gif_frames: true, optimize_gif_transparency: true, format: "gif")
     end
 
     def preview
@@ -50,7 +50,7 @@ module Vips
       target_size = meme_image.height > meme_image.width ? 466 : 451
 
       scale = [target_size.to_f / meme_image.width, target_size.to_f / meme_image.height].min
-      meme_image = meme_image.resize(scale, kernel: :nearest) # resize to fit a inside target_size by target_size box
+      meme_image = meme_image.resize(scale, kernel: :cubic) # resize to fit a inside target_size by target_size box
       rgba = meme_image.bandjoin(255)
       x_coord = ((451 - rgba.width) / 2) + 86
       y_coord = ((466 - rgba.height) / 2) + 188

@@ -45,6 +45,7 @@
 
 </div>
 <hr>
+<% if @gas_prices.present? %>
 <div class="container">
   <div class="row">
     <div class="offset-2 col-8">
@@ -53,6 +54,7 @@
   </div>
 </div>
 <hr>
+<% end %>
 <div class="container">
   <%= yield %>
 </div>

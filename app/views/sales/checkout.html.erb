@@ -6,6 +6,8 @@
       <p>Your meme trading card has been created!</p>
       <p>To complete the process and have the Non-Fungible Token minted, you must provide gas to the mint.</p>
       <%= image_tag meme_image_url(@item), alt: "<Can not display image>", class: "image meme_card" %>
+      <br>
+      <%= processing_html(@item) %>
     </div>
 
     <div class="col-sm-4">

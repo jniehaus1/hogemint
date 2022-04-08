@@ -40,6 +40,7 @@ class Item < ApplicationRecord
   validate :run_validations
 
   before_create :generate_uri, :generate_meme_card
+  after_create  :run_after_create
 
   enum generation: {
       zero: 0,
@@ -67,6 +68,10 @@ class Item < ApplicationRecord
 
   def run_validations
     generation_instance.new(item: self).run_validations
+  end
+
+  def run_after_create
+    generation_instance.new(item: self).run_after_create
   end
 
   def generation_instance

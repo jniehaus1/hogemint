@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_11_231509) do
+ActiveRecord::Schema.define(version: 2021_08_15_001831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 2021_07_11_231509) do
     t.datetime "meme_card_updated_at"
     t.integer "generation"
     t.boolean "is_flagged"
+    t.boolean "processing", default: true
   end
 
   create_table "now_payments", force: :cascade do |t|

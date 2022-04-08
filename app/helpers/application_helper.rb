@@ -12,4 +12,10 @@ module ApplicationHelper
     return nil unless attachment.present?
     attachment.url.sub("//","").gsub("#{ENV["AWS_S3_BUCKET"]}/","")
   end
+
+  def processing_html(item)
+    return nil if !item.processing
+
+    return "<small>The image shown is a preview. The server is compiling your gif and it will be available in a short time.</small>".html_safe
+  end
 end

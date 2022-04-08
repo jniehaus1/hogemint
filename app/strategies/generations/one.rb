@@ -63,5 +63,7 @@ module Generations
     def generate_card
       Items::CardGenerator.call(@item)
     end
+
+    def run_after_create; end
   end
 end
