@@ -13,7 +13,7 @@ module NftPrinter
     def call
       raise "Gas too high" if @gas_price > 150
       @sale = @item.sales.first
-      raise "Gas much higher than invoice" if (@sale.mint_price * 1.15) > @gas_price
+      raise "Gas much higher than invoice" if @gas_price > (@sale.gas_price * 1.15)
 
       validate_inputs
       validate_uri
