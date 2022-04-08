@@ -4,8 +4,8 @@ class MintWorker
   def perform(sale_id, generation)
     sale = Sale.find(sale_id)
     sale.mint! # Advance sale state
-
     nft_asset = sale.nft_asset
+
     if generation == "three" || generation == "two"
       NftPrinter::Create.call(sale, mint_address(generation), private_key(generation))
       sale.submit_tx!
@@ -18,9 +18,9 @@ class MintWorker
     end
   rescue Timeout::Error => e
     Rails.logger.error("Timed out minting sale #{sale.id}: #{e}")
+    sale.fail_minting!
   rescue StandardError => e
     sale.fail_minting! # Move to failed state
-    raise e # Reraise
   end
 
   private

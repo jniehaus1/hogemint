@@ -63,4 +63,5 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   #
   require 'support/factory_girl'
+  require 'sidekiq/testing'
 end
