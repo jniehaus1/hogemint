@@ -22,4 +22,4 @@ To launch the hogemint app run:
     docker-compose build
     docker-compose up
 
-hogemint should now be present on localhost:3030
+hogemint should now be present on localhost:3000
