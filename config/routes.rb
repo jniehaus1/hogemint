@@ -3,7 +3,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :test_items, only: [:new, :create, :show]
-  resources :items,      only: [:show]
+  resources :items,      only: [:show, :destroy]
   resources :base_items, only: [:new, :create, :show] do
     member do
       post :skip_payment

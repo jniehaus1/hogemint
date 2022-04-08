@@ -53,6 +53,18 @@ class ItemsController < ApplicationController
     @sale = @item.sales.first
   end
 
+  def destroy
+    @item = Item.includes(:sales).find(params[:id])
+
+    if @item.sales.first.new?
+      @item.image.destroy
+      @item.meme_card.destroy
+      @item.destroy
+    end
+
+    redirect_to :root
+  end
+
   private
 
   def uri_name(item)
