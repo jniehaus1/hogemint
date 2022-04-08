@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     root to: 'test_items#new'
   end
 
-  if Rails.env == "development"
-    mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
-  end
+  # if Rails.env == "development"
+  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
+  # end
 end
