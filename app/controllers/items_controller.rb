@@ -11,9 +11,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    # return nil unless HOGE_HOLDERS.include?(key_owner.hex)
-
-    @item = Item.new(item_params.slice(:owner, :image))
+    @item = Item.new(item_params.slice(:owner, :image, :signed_msg, :nonce))
 
     if @item.save
       redirect_to @item

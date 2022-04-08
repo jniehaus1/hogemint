@@ -13,29 +13,45 @@ class Item < ApplicationRecord
   has_one_attached :image
   has_one_attached :meme_card
 
-  # validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "Must be a valid wallet address" }
+  validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "Must be a valid wallet address" }
   validates :image, presence: true, blob: { content_type: ['image/png', 'image/jpg', 'image/jpeg'], size_range: 0..5.megabytes }
+  validate :owner_matches_signed_msg
   validate :owner_is_unique
-  # validate :owner_has_hoge
+  validate :owner_has_hoge
 
   before_create :generate_uri
   after_create  :generate_meme_card
 
   attr_accessor :nonce, :signed_msg
 
+  # May be ethereum prefixed on production
+  MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
+
+  class << self
+    def find_by_uri(uri: uri)
+      Item.find_by(uri: uri)
+    end
+  end
+
   def generate_uri
     # stuff
+  end
+
+  def owner_matches_signed_msg
+    return nil if key_owner == owner
+
+    errors.add(:owner, "does not match signed message. Did you use the correct wallet?")
   end
 
   def owner_is_unique
     return nil unless Item.find_by(owner: owner).present?
 
-    errors.add(:owner, "Wallet address must be unique. It has already been used!")
+    errors.add(:owner, "asset address must be unique. It has already been used!")
     throw(:abort)
   end
 
   def owner_has_hoge
-    return nil unless HOGE_HOLDERS.include?(item_params[:owner].hex)
+    return nil if HOGE_HOLDERS.include?(owner.hex)
 
     errors.add(:owner, "Wallet address must contain HOGE tokens.")
     throw(:abort)
@@ -46,7 +62,7 @@ class Item < ApplicationRecord
   end
 
   def key_from_msg
-    Eth::Key.personal_recover(MSG_PREFIX + item_params[:nonce], item_params[:signed_msg])
+    Eth::Key.personal_recover(MSG_PREFIX + nonce, signed_msg)
   end
 
   def generate_meme_card
