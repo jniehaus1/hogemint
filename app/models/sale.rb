@@ -17,6 +17,8 @@
 #  merchant_order_id :string
 #  coingate_order_id :string
 #  payment_id        :string
+#  invoice_url       :string
+#  tx_hash           :string
 #
 class Sale < ApplicationRecord
   include AASM

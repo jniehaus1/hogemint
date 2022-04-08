@@ -14,7 +14,8 @@ module NftPrinter
       validate_uri
 
       contract = build_contract
-      contract.transact.mint(@owner, @item.uri)
+      tx = contract.transact.mint(@owner, @item.uri)
+      @item.sales.first.update(tx_hash: tx.id)
     end
 
     def resubmit(nonce)
