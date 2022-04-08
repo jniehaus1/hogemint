@@ -3,7 +3,10 @@ Rails.application.routes.draw do
   resources :items,      only: [:new, :create, :index, :show]
   resources :test_items, only: [:new, :create, :index, :show]
 
-  if ENV["PRINTER_IS_LIVE"] == "true"
+  get 'faq',   to:'statics#faq'
+  get 'guide', to:'statics#guide'
+
+  if ENV["PRINTER_IS_LIVE"] == 'true'
     root to: 'items#new'
   else
     root to: 'test_items#new'

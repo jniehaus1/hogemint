@@ -8,11 +8,11 @@ module Items
 
     def call
       im = Magick::Image.from_blob(@item.image.download)
-      im = im[0].resize_to_fit(562,579) # Template size
-      im_template = Magick::Image.read("data/pics/template_nasa.jpg")
+      im = im[0].resize_to_fit(548,566) # Template size
+      im_template = Magick::Image.read("data/pics/template_nasa_neon.jpg")
 
-      x_coord = ((562 - im.columns.to_i) / 2) + 93
-      y_coord = ((579 - im.rows.to_i) / 2) + 211
+      x_coord = ((548 - im.columns.to_i) / 2) + 100
+      y_coord = ((566 - im.rows.to_i) / 2) + 218
       im3 = im_template[0].composite(im, x_coord, y_coord, Magick::OverCompositeOp)
 
       title = Magick::Draw.new
