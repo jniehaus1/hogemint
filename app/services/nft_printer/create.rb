@@ -17,7 +17,7 @@ module NftPrinter
       tx = contract.transact.mint(@owner, @item.uri)
       @item.sales.first.update(tx_hash: tx.id)
       # Resubmit transaction if it hasn't showed up on etherscan in 1 hour
-      VerifyWorker.perform_in(1.hour, @item.sales.first)
+      VerifyWorker.perform_in(1.hour, @item.sales.first.id)
     end
 
     def resubmit(nonce)
