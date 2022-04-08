@@ -146,7 +146,7 @@ module Vips
 
       ##
       # flavor text dimensions
-      flavor_width  = 537
+      flavor_width  = 500
       flavor_height = 251
       flavor_x_offset = 70
       flavor_y_offset = 710
