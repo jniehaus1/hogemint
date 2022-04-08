@@ -39,7 +39,8 @@ class Item < ApplicationRecord
   enum generation: {
       zero: 0,
       one:  1,
-      two:  2
+      two:  2,
+      three: 3
   }
 
   attr_accessor :nonce, :signed_msg

@@ -28,7 +28,7 @@ module NowPayments
 
     # https://documenter.getpostman.com/view/7907941/S1a32n38?version=latest#5e37f3ad-0fa1-4292-af51-5c7f95730486
     def call
-      eth = ENV["GAS_TO_CHARGE"].to_i * @gas_price * 1e-9
+      eth = ENV["MINT_GAS_LIMIT"].to_i * @gas_price * 1e-9
       # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc
       estimate_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{eth}&currency_from=eth&currency_to=usd", { headers: headers })
       @price_amount = estimate_response["estimated_amount"]

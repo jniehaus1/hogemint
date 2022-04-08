@@ -15,20 +15,20 @@
         <table class="table table-dark">
           <tbody>
           <tr>
-            <td>Gas Price</td>
+            <td data-toggle="tooltip" data-placement="top" title="Gas price determined by Etherscan Gas Tracker">Gas Price</td>
             <td><%= gas_price %> gwei</td>
           </tr>
           <tr>
             <td>Mint Gas Amount</td>
-            <td><%= ENV["GAS_TO_CHARGE"] %></td>
+            <td><%= number_with_delimiter(ENV["MINT_GAS_LIMIT"], delimiter: ",") %> gas</td>
           </tr>
           <tr>
-            <td>Transfer Fee</td>
-            <td>21,000</td>
+            <td>Estimated Mint Fees</td>
+            <td>150,000 HOGE</td>
           </tr>
           <tr class="table-secondary">
-            <td>ETH Cost</td>
-            <td><%= (gas_price * ENV["GAS_TO_CHARGE"].to_i * 1e-9).truncate(6) %></td>
+            <td>Cost</td>
+            <td><%= number_with_delimiter(mint_price, :delimiter => ',') %> HOGE</td>
           </tr>
           </tbody>
         </table>
@@ -59,7 +59,7 @@
           </table>
         </div>
       <% end %>
-      <%= button_to "Delete and Start Over", item_url(@item), method: :delete, class: "btn btn-danger" if @item.sales.first.new? %>
+      <%= button_to "Delete and Start Over", item_url(@item), method: :delete, class: "btn btn-danger" if @sale.new? %>
     </div>
   </div>
 <% end %>
