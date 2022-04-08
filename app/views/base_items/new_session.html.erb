@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-4 mx-auto">
+    <%= form_with url: "/login" do |f| %>
+      <div class="form-group row">
+        <h4><%= f.label :password, "Password" %></h4>
+        <div class="col-sm-12">
+          <%= f.text_field :password, maxlength: 200, class: "form-control", placeholder: "" %>
+        </div>
+      </div>
+
+      <div class="actions my-2">
+        <%= f.submit "Submit" %>
+      </div>
+    <% end %>
+  </div>
+</div>
