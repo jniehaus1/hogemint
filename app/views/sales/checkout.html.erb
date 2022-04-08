@@ -44,7 +44,7 @@
         </table>
         <p>When you have finished, continue to view your NFT asset: <%= link_to "Continue", item_url(@item), class: "btn btn-primary" %></p>
       <% if returning_checkout %>
-        <p>If you have already started a payment, you can see the status below. If you believe there has been a mistake, reach out to supporte@hoge.finance.</p>
+        <p>If you have already started a payment, you can see the status below. If you believe there has been a mistake, reach out to support@hoge.finance.</p>
       <% end %>
       <% unless payment_status["message"].present? %>
         Payment underway!<br>

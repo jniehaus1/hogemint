@@ -11,6 +11,7 @@ class MintWorker
       sale.finish_minting!
     elsif generation == "one"
       NftPrinter::CreateGenOne.call(nft_asset, sale.nft_owner, mint_address(generation), private_key(generation))
+      sale.finish_minting!
     else
       sale.fail_minting!
       raise "Cannot mint, not generation 1 or 2."
