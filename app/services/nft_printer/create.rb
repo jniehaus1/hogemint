@@ -14,7 +14,7 @@ module NftPrinter
       validate_uri
 
       contract = build_contract
-      contract.transact_and_wait.mint(@owner, @item.uri)
+      contract.transact.mint(@owner, @item.uri)
     end
 
     def build_contract
