@@ -29,7 +29,9 @@ class Item < ApplicationRecord
   has_many :sales, as: :nft_asset, dependent: :destroy
 
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
+
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
+  validates_attachment :image, presence: true, size: { less_than: 5.megabytes }
 
   validate :printer_is_live
   validate :run_validations
