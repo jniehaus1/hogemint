@@ -10,6 +10,8 @@ module Generations
     def generate_card
       stringio = Vips::Compile.new(@item).preview
       # IPFS
+      #
+      binding.pry
       Ipfs::Store.call(@item, stringio.read)
       stringio.rewind
 

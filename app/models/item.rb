@@ -96,4 +96,8 @@ class Item < ApplicationRecord
   def ipfs_url
     "ipfs://#{ipfs_file_cid}"
   end
+
+  def ipfs_file_url
+    "https://ipfs.io/ipfs/#{ipfs_meme_file_cid}"
+  end
 end

@@ -21,13 +21,18 @@ module Ipfs
 
       file = Tempfile.new(:encoding => 'ascii-8bit')
       file << file_data
+      file.rewind
 
       #['pinataOptions', '{"cidVersion":0}'],
       form_data = [['file', file]]
 
       request.set_form form_data, 'multipart/form-data'
 
-      return JSON.parse(https.request(request).read_body)
+      response = JSON.parse(https.request(request).read_body)
+
+      Rails.logger.info(response)
+
+      return response
     ensure
       file.close
       file.unlink
@@ -51,6 +56,10 @@ module Ipfs
       request.body = uri_hash.to_json
 
       return JSON.parse(https.request(request).read_body)
+    end
+
+    def self.ruby_example()
+
     end
   end
 end
