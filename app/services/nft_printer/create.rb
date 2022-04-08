@@ -7,15 +7,21 @@ module NftPrinter
       @owner = owner
       @mint_address = mint_addr
       @private_key_str = private_key
+      @gas_price = Etherscan::GasStation.gas_price
     end
 
     def call
+      raise "Gas too high" if @gas_price > 150
+      sale = @item.sales.first
+      raise "Gas much higher than invoice" if (@sale.mint_price * 1.15) > @gas_price
+
       validate_inputs
       validate_uri
 
       contract = build_contract
       tx = contract.transact.mint(@owner, @item.uri)
-      @item.sales.first.update(tx_hash: tx.id)
+
+      sale.update(tx_hash: tx.id)
       # Resubmit transaction if it hasn't showed up on etherscan in 1 hour
       VerifyWorker.perform_in(1.hour, @item.sales.first.id)
     end
@@ -45,7 +51,7 @@ module NftPrinter
     def client
       @client = Ethereum::HttpClient.new(ENV["ETH_NODE"])
       @client.gas_limit = ENV["MINT_GAS_LIMIT"].to_i # In Gas: 250000 for example
-      @client.gas_price = Etherscan::GasStation.gas_price * 1000000000 # in Wei: 110000000000 for example
+      @client.gas_price = @gas_price * 1000000000 # in Wei: 110000000000 for example
       @client
     end
 
