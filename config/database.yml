@@ -12,22 +12,29 @@
 # Configure Using Gemfile
 # gem 'pg'
 #
-development:
+default: &default
   adapter:  postgresql
-  host:     localhost
   encoding: unicode
-  database: <%= ENV["DATABASE_NAME"] %>
-  pool:     5
+  host:     <%= ENV["DB_HOST"] %>
+  port:     <%= ENV["DB_PORT"] %>
   username: <%= ENV["DB_USER"] %>
   password: <%= ENV["DB_PASS"] %>
+  pool:     5
   template: template0
 
+
+development:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] + "/hogemint_development" %>
+  database: hogemint_development
+  
 production:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: <%= ENV["DATABASE_NAME"] %>
-  pool:     5
-  username: <%= ENV["DB_USER"] %>
-  password: <%= ENV["DB_PASS"] %>
-  template: template0
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] + "/hogemint_production" %>
+  database: hogemint_production
+  
+test:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] + "/hogemint_test" %>
+  database: hogemint_test
+  
