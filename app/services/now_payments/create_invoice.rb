@@ -81,7 +81,7 @@ module NowPayments
 
     def headers
       { "x-api-key"    => ENV["NP_API_KEY"],
-        'Content-Type' => 'application/json'}
+        'Content-Type' => 'application/json' }
     end
 
     def fake_invoice

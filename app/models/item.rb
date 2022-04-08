@@ -85,4 +85,8 @@ class Item < ApplicationRecord
   def order_id
     "#{ENV["NP_LOCAL_POISON"]}ITEM_00_#{self.id}"
   end
+
+  def ipfs_url
+    "ipfs://#{ipfs_file_cid}"
+  end
 end

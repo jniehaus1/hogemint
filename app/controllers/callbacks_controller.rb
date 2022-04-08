@@ -27,14 +27,15 @@ class CallbacksController < ApplicationController
     # :message is used to signal error
     return nil if params[:message].present?
 
-    # Could not find sale, :order_id missing somehow
-    sale = Sale.find_by(merchant_order_id: np_params[:order_id])
-    return nil if sale.blank?
+    sale = Sale.includes(:nft_asset).find_by(merchant_order_id: np_params[:order_id])
+    return nil if sale.blank? # Could not find sale, :order_id missing somehow
 
     # Guard clause "new" callback is sent many times from NowPayments server
     return invoice_sale(sale) if np_params[:payment_status] == "waiting" && sale.aasm_state == "new"
 
     # Move to canceled state
+    # Leave this commented, people can create multiple payments in NP and the first couple will trigger
+    # a swap to the "failed" state even if a later transaction goes through.
     # return cancel_sale(sale) if ["failed", "refunded", "expired"].include?(np_params[:payment_status])
 
     # No internal action to take, receipt already exists
