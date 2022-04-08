@@ -1,4 +1,6 @@
 module Ipfs
+  include Rails.application.routes.url_helpers
+
   class Store
     include ApplicationService
 
@@ -24,13 +26,14 @@ module Ipfs
 
     private
 
-    # def base64_image
-    #   Paperclip.io_adapters.for(@item.image).read
-    # end
-
-    # TODO - Add other fields
     def uri_hash(response)
-      { image: "ipfs://#{response['IpfsHash']}" }
+      {
+        "name":        item.uri_name,
+        "image":       "ipfs://#{response['IpfsHash']}",
+        "description": "Minted from the crucible of based memes.",
+        "nft_url":     item_url(item),
+        "created_at":  item.created_at
+      }
     end
   end
 end

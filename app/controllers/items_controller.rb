@@ -16,6 +16,7 @@ class ItemsController < ApplicationController
   end
 
   def create
+    # TODO - reconsider checkout flow for same wallet
     # @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
 
     if @item.blank?
@@ -45,7 +46,7 @@ class ItemsController < ApplicationController
     end
 
     msg = {
-        "name":        uri_name(item),
+        "name":        item.uri_name,
         "image":       image_link,
         "description": "Minted from the crucible of based memes.",
         "nft_url":     nft_url,
@@ -61,16 +62,6 @@ class ItemsController < ApplicationController
   end
 
   private
-
-  def uri_name(item)
-    if item.generation == "one"
-      "Hoge Foundation NFT"
-    elsif item.generation == "two"
-      "Hoge Expansion NFT"
-    else
-      "Hoge NFT"
-    end
-  end
 
   def render_failed_item_create
     @error_messages = @item.errors.full_messages

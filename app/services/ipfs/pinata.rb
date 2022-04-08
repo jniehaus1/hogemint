@@ -57,9 +57,5 @@ module Ipfs
 
       return JSON.parse(https.request(request).read_body)
     end
-
-    def self.ruby_example()
-
-    end
   end
 end

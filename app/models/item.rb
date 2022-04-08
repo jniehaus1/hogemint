@@ -100,4 +100,14 @@ class Item < ApplicationRecord
   def ipfs_file_url
     "https://ipfs.io/ipfs/#{ipfs_meme_file_cid}"
   end
+
+  def uri_name
+    if generation == "one"
+      "Hoge Foundation NFT"
+    elsif generation == "two"
+      "Hoge Expansion NFT"
+    else
+      "Hoge NFT"
+    end
+  end
 end
