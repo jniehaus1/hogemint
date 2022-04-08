@@ -1,2 +1,11 @@
-<h1>Tokens#index</h1>
-<p>Find me in app/views/tokens/index.html.erb</p>
+<h1>List of Minted Cards</h1>
+<div class="col-12 mb-4">
+  <% @items.each_slice(2) do |item_set| %>
+    <div class="row mb-4">
+      <% item_set.each do |item| %>
+        <%= render "card", item: item %>
+      <% end %>
+    </div>
+  <% end %>
+  <%= link_to "Home", root_path %>
+</div>

@@ -1,21 +1,48 @@
 <h1>HogeMint</h1>
 <p>Do you want your one-time newly minted non-fungible token? Add an image below. It will be stamped and added to our repository.
   The certificate of authenticity will be added to the blockchain.</p>
-<% @item.errors.each do |message| %>
-  <li><%= message %></li>
-<% end %>
+<div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
 <%= form_with(model: @item) do |f| %>
-  <h2 class="block-title mb-0 ml-0"><%= f.label :owner, "Asset Owner" %></h2>
-  <div class="form-group">
-    <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
+  <div class="form-group row">
+    <h2><%= f.label :owner, "Asset Owner" %></h2>
+    <div class="col-sm-6">
+      <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
+    </div>
   </div>
 
-  <h2 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h2>
   <div class="form-group">
-    <%= f.file_field :image, class: "form-control" %>
+    <h2 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h2>
+    <img id="img_prev" src="#" alt="" />
+    <div class="col-sm-6">
+      <%= f.file_field :image, class: "form-control", onChange: "readURL(this);" %>
+    </div>
   </div>
 
-  <div class="actions col-sm-12">
-    <%= f.submit "Submit", class: "btn btn-primary float-right" %>
+  <div class="form-group my-3">
+    <button type="button" id="sign_message-btn" class="btn btn-secondary">Sign Transaction!</button>
+  </div>
+  <%= f.hidden_field(:signed_msg) %>
+  <%= f.hidden_field(:nonce, value: @nonce) %>
+
+  <div class="actions col-sm-6">
+    <%= f.submit "Submit",
+                 class: "btn btn-primary",
+                 id: "submit-btn",
+                 disabled: true,
+                 autocomplete: "off" %><span class="text-secondary" id="text-warning"> **You must sign the transaction before submitting your image.</span>
   </div>
 <% end %>
+
+<!-- Assume jQuery is loaded -->
+<script>
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+         $('#img_prev')
+           .attr('src', e.target.result);
+          };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
