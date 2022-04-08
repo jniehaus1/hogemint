@@ -1,0 +1,74 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: '${DB_USER}'
+      POSTGRES_PASSWORD: '${DB_PASS}'
+  web:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: '${DATABASE_URL}'
+      DB_HOST: '${DB_HOST}'
+      DB_PORT: '${DB_PORT}'
+      DB_USER: '${DB_USER}'
+      DB_PASS: '${DB_PASS}'
+    volumes:
+      - 'app-gems:/usr/local/bundle'
+    ports:
+      - '3000:3000'
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis-data:/var/lib/redis/data'
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL}'
+      PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD}'
+      PGADMIN_LISTEN_PORT: '${PGADMIN_LISTEN_PORT}'
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - 'pga-data:/var/lib/pgadmin'
+    links:
+      - 'db:pgsql-server'
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+  geth:
+    container_name: geth
+    image: ethereum/client-go
+    command: '--syncmode "light" --http --http.api=eth,web3,debug,txpool,admin --http.port=8545 --http.addr=0.0.0.0'
+    ports:
+      - '8545:8545'
+    volumes:
+      - 'geth-data:/root/.ethereum/geth/lightchaindata'
+volumes:
+  geth-data:
+    driver: local
+  db-data:
+    driver: local
+  pga-data:
+    driver: local
+  app-gems:
+    driver: local
+  redis-data:
+    driver: local
