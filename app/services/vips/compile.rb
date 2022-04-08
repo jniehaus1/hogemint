@@ -13,6 +13,14 @@ module Vips
     end
 
     def gif
+      pages = is_gif? ? from_animated_image : from_static_image
+
+      newgif = Vips::Image.arrayjoin(pages, { across: 1 })
+      StringIO.new(newgif.write_to_buffer ".gif", optimize_gif_frames: true, optimize_gif_transparency: true, format: "gif")
+    end
+
+    def from_static_image
+      # Load template into separate pages
       n_loaded_pages = template.height / page_height
       pages = Array.new(n_loaded_pages)
       n_loaded_pages.times do |i|
@@ -22,13 +30,43 @@ module Vips
       overlay = rmagick_overlay
       rgba_embed = resize_and_alpha
 
-      pages = pages.map do |f|
+      pages.map do |f|
         f = f.composite(rgba_embed, "over")
         f.composite(overlay, "over")
       end
+    end
 
-      newgif = Vips::Image.arrayjoin(pages, { across: 1 })
-      StringIO.new(newgif.write_to_buffer ".gif", optimize_gif_frames: true, optimize_gif_transparency: true, format: "gif")
+    def from_animated_image
+      # Load template into separate pages
+      n_loaded_pages = template.height / page_height
+      gif_pages = Array.new(n_loaded_pages)
+      n_loaded_pages.times do |i|
+        gif_pages[i] = template.crop(0, i * page_height, template.width, page_height)
+      end
+
+      overlay = rmagick_overlay
+      upload_pages = resize_and_alpha_gif
+
+      # Repeats the user uploaded gif as many times as possible before truncating non-matching frames
+      factor    = gif_pages.count / upload_pages.count
+      remainder = gif_pages.count % upload_pages.count
+
+      k = 0
+      factor.times do
+        upload_pages.size.times do |j|
+          gif_pages[k] = gif_pages[k].composite(upload_pages[j], "over")
+          gif_pages[k] = gif_pages[k].composite(overlay, "over")
+          k += 1
+        end
+      end
+
+      remainder.times do |i|
+        gif_pages[k] = gif_pages[k].composite(upload_pages[i], "over")
+        gif_pages[k] = gif_pages[k].composite(overlay, "over")
+        k += 1
+      end
+
+      return gif_pages
     end
 
     def resize_and_alpha
@@ -56,8 +94,19 @@ module Vips
       target_size = page_height > meme_gif.width ? 466 : 451
       scale = [target_size.to_f / meme_gif.width, target_size.to_f / page_height].min
 
-      # TODO - Does not update page-height. Perhaps break into individual frames, resize them each, and send back to method?
-      meme_gif.resize(scale, kernel: :cubic)
+      pages = Array.new(num_pages)
+      num_pages.times do |i|
+        pages[i] = meme_gif.crop(0, i * page_height, meme_gif.width, page_height)
+        pages[i] = pages[i].resize(scale, kernel: :cubic)
+      end
+
+      x_coord = ((451 - pages[0].width) / 2) + 86
+      y_coord = ((466 - pages[0].height) / 2) + 188
+      num_pages.times do |i|
+        pages[i] = pages[i].embed(x_coord, y_coord, 625, 1000)
+      end
+
+      return pages
     end
 
     def image_binary
