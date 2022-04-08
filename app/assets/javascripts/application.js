@@ -17,4 +17,5 @@
 //= require bootstrap
 //= require jquery
 //= require web3/dist/web3.min.js
+//= require web3modal/dist/index.js
 //= require_tree .
