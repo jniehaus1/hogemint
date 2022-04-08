@@ -249,6 +249,9 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
+    sidekiq-lock (0.5.0)
+      redis (>= 3.0.5)
+      sidekiq (>= 2.14.0)
     smarter_csv (1.2.8)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
@@ -322,6 +325,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   schmooze
   sidekiq
+  sidekiq-lock
   smarter_csv
   spring
   spring-watcher-listen (~> 2.0.0)
