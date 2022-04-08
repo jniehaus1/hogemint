@@ -2,6 +2,7 @@
 <% unless ENV["PRINTER_IS_LIVE"] == "true" %>
   <h2>Test Mode Engaged</h2>
 <% end %>
+<h6>View Memes in Circulation: <%= link_to "View", item_index_link %></h6>
 <p>Do you want your one-time newly minted non-fungible token? Add an image below. It will be stamped and added to our repository.
   The certificate of authenticity will be added to the blockchain.</p>
 <div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>

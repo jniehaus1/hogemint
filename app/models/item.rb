@@ -63,7 +63,6 @@ class Item < ApplicationRecord
 
   def meme_is_unique
     image_hash = Digest::MD5.hexdigest(self.image.download)
-    binding.pry
     return nil unless Item.find_by(image_hash: image_hash).present?
 
     errors.add(:base, "Image has already been turned into a meme! Your image must be unique.")
@@ -93,32 +92,7 @@ class Item < ApplicationRecord
 
   def generate_meme_card
     if image.attached?
-      im = Magick::Image.from_blob(image.download)
-      im = im[0].resize_to_fit(531) # Template size
-      im_template = Magick::Image.read("data/pics/card_template.jpg")
-
-      x_coord = ((531 - im.columns.to_i) / 2) + 81
-      y_coord = ((531 - im.rows.to_i) / 2) + 189
-      im3 = im_template[0].composite(im,x_coord,y_coord, Magick::OverCompositeOp)
-
-      gc = Magick::Draw.new
-      gc.annotate(im3, 10, 10, 10, 10, '"Hello there!"')
-
-      # title.annotate(montage, 0,0,0,40, 'Named Colors') {
-      #   self.font_family = 'Helvetica'
-      #   self.fill = 'white'
-      #   self.stroke = 'transparent'
-      #   self.pointsize = 32
-      #   self.font_weight = BoldWeight
-      #   self.gravity = NorthGravity
-      # }
-
-      t = Tempfile.new
-      t.binmode
-      t.write(im3.to_blob)
-      t.rewind
-
-      self.meme_card.attach(io: t, filename: "foo.jpg", content_type: "image/jpeg")
+      Items::CardGenerator.call(self)
     end
   end
 end

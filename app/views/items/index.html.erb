@@ -1,6 +1,6 @@
 <h1>List of Minted Cards</h1>
 <div class="col-12 mb-4">
-  <% @items.each_slice(2) do |item_set| %>
+  <% @items.each_slice(3) do |item_set| %>
     <div class="row mb-4">
       <% item_set.each do |item| %>
         <%= render "card", item: item %>

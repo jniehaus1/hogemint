@@ -1,4 +1,4 @@
 <h1>Items#show</h1>
-<div>
-  <%= image_tag @item.meme_card, alt: "NOOOOOOO" if @item.meme_card.attached? %>
+<div class="viewport">
+  <%= image_tag @item.meme_card, alt: "NOOOOOOO", class: "image" if @item.meme_card.attached? %>
 </div>
