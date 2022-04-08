@@ -65,7 +65,7 @@ services:
   #  ports:
   #    - '8545:8545'
   #  volumes:
-  #    - 'geth-data:/root/.ethereum/geth/lightchaindata'
+  #    - 'geth-data:/root/.ethereum'
 volumes:
   #geth-data:
   #  driver: local
