@@ -29,7 +29,7 @@ class BaseItem < ApplicationRecord
   end
 
   def order_id
-    "BASEITEM_#{self.id}"
+    "BASEITEM_TWO_#{self.id}"
   end
 
   def generation
