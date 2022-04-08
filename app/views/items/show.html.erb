@@ -1,7 +1,7 @@
 <h3>Save this image and URL to come back and view your digital asset</h3>
 <div class="row">
   <div class="col-md-6">
-    <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image" %>
+    <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image meme_card" %>
   </div>
   <div class="col-md-6">
     <% if @item.can_remint? && ENV["ALLOW_REMINT"] %>

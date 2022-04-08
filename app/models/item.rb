@@ -44,7 +44,7 @@ class Item < ApplicationRecord
   attr_accessor :nonce, :signed_msg
 
   def generate_uri
-    self.uri = SecureRandom.hex(32)[0..31]
+    self.uri = SecureRandom.hex(16)
   end
 
   def printer_is_live

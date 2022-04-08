@@ -20,7 +20,7 @@ class SalesController < ApplicationController
     @sale = Sale.create(sale_params(order_response))
     return render_failed_sale_create if @sale.errors.present?
 
-    render "checkout", locals: { coingate_url: order_response.payment_url }
+    render "checkout", locals: { coingate_url: order_response.payment_url, gas_price: Etherscan::GasStation.gas_price }
   end
 
   def return_checkout
@@ -28,7 +28,7 @@ class SalesController < ApplicationController
     order_response = CoinGate::Merchant::Order.find(@sale.coingate_order_id)
 
     return render_failed_coingate_return unless order_response.status == "new"
-    render "checkout", locals: { coingate_url: order_response.payment_url }
+    render "checkout", locals: { coingate_url: order_response.payment_url, gas_price: Etherscan::GasStation.gas_price }
   end
 
   def render_no_item
