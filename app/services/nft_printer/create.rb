@@ -12,7 +12,7 @@ module NftPrinter
 
     def call
       raise "Gas too high" if @gas_price > 150
-      sale = @item.sales.first
+      @sale = @item.sales.first
       raise "Gas much higher than invoice" if (@sale.mint_price * 1.15) > @gas_price
 
       validate_inputs
@@ -21,7 +21,7 @@ module NftPrinter
       contract = build_contract
       tx = contract.transact.mint(@owner, @item.uri)
 
-      sale.update(tx_hash: tx.id)
+      @sale.update(tx_hash: tx.id)
       # Resubmit transaction if it hasn't showed up on etherscan in 1 hour
       VerifyWorker.perform_in(1.hour, @item.sales.first.id)
     end
