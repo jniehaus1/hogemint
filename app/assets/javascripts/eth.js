@@ -59,6 +59,6 @@ App = {
     }
 };
 
-$(window).on("load", function() {
+$(document).ready( function() {
     $("#sign_message-btn").on('click', doWeb3Thing);
 });

@@ -53,7 +53,7 @@ class Item < ApplicationRecord
   def owner_has_hoge
     return nil if HOGE_HOLDERS.include?(owner.hex)
 
-    errors.add(:base, "Owner wallet must contain HOGE tokens.")
+    errors.add(:base, "Owner wallet must have containd HOGE tokens BEFORE WhiteBIT listing March 3rd, 2021.")
     throw(:abort)
   end
 
