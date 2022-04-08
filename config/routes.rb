@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :base_items, only: [:new, :create, :show]
 
   # item URLs
-  get '/uri/:id', to: 'items#uri'
+  get '/uri/:id', to: 'items#uri', as: "item_uri"
   get 'item/remint/:id', to: 'items#remint', as: "remint_item"
 
   get 'sales/checkout/:id', to: 'sales#checkout', as: 'sales_checkout'

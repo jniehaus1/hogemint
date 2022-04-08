@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_29_215556) do
+ActiveRecord::Schema.define(version: 2021_05_09_173542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,21 @@ ActiveRecord::Schema.define(version: 2021_04_29_215556) do
     t.integer "generation"
   end
 
+  create_table "now_payments", force: :cascade do |t|
+    t.string "payment_id"
+    t.string "payment_status"
+    t.string "price_amount"
+    t.string "price_currency"
+    t.string "pay_amount"
+    t.string "pay_currency"
+    t.string "order_id"
+    t.string "order_description"
+    t.string "ipn_callback_url"
+    t.string "purchase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sales", force: :cascade do |t|
     t.integer "quantity"
     t.integer "gas_for_mint"
@@ -100,6 +115,7 @@ ActiveRecord::Schema.define(version: 2021_04_29_215556) do
     t.string "nft_asset_type"
     t.string "merchant_order_id"
     t.string "coingate_order_id"
+    t.string "payment_id"
   end
 
   create_table "test_items", force: :cascade do |t|

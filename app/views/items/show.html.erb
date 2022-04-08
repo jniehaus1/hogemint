@@ -1,13 +1,18 @@
-<h3>Save this image and URL to come back and view your digital asset</h3>
 <div class="row">
+  <h3>Save this image and URL to come back and view your Trading Card!</h3>
+</div>
+<div class="row mt-2">
   <div class="col-md-6">
-    <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image meme_card" %>
+    <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image meme_card" %><br>
+    <div class="offset-2">
+      <%= link_to "Metadata", item_uri_url(@item.uri) %>
+    </div>
   </div>
   <div class="col-md-6">
     <% if @item.can_remint? && ENV["ALLOW_REMINT"] %>
       <%= render "shared/remint_first_gen" %>
     <% elsif @sale.blank? || @sale.new? %>
-      Click here to provide the gas fees and get your NFT minted! <%= link_to "Checkout", sales_checkout_url(@item) %>
+      Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_checkout_url(@item) %> to check the status of your order.
     <% end %>
   </div>
 </div>

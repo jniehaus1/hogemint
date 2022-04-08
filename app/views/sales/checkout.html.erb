@@ -10,7 +10,7 @@
     </div>
 
     <div class="col-sm-4">
-      <p>HogeMint uses CoinGate to transfer ETH and pay for the gas to create your NFT, click the link below to get your unique coingate link.</p>
+      <p>HogeMint uses NOWPayments to transfer ETH and pay for the gas to create your NFT.</p>
       <p class="lead">Checkout Details</p>
       <div class="table-responsive">
       <table class="table table-dark">
@@ -31,11 +31,32 @@
             <td>ETH Cost</td>
             <td><%= (gas_price * (250000 + 21000) * 1e-9).truncate(6) %></td>
           </tr>
-
         </tbody>
       </table>
       </div>
-      <a href="<%= coingate_url %>">Click here to complete your payment on CoinGate</a>
+
+      <table class="table table-dark">
+        <tbody>
+          <tr class="table-active">
+            <td>Status</td>
+            <td><%= pay_status.upcase %></td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <% if pay_status == "waiting" %>
+        <p>Send the above amount to this address:</p>
+        <table class="table table-dark">
+          <tbody>
+          <tr class="table-secondary">
+            <td><%= pay_address.upcase %></td>
+          </tr>
+          </tbody>
+        </table>
+        <p>When you have finished, continue to view your NFT asset: <%= link_to "Continue", item_url(@item) %></p>
+      <% else %>
+        <p>It looks like you have already transferred gas fees for this! If you believe there has been a mistake, reach out to supporte@hoge.finance. Otherwise <%= link_to "continue", item_url(@item) %> to your NFT image.</p>
+      <% end %>
     </div>
   </div>
 <% end %>
