@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: test_items
+#
+#  id          :bigint           not null, primary key
+#  token_id    :integer
+#  uri         :string
+#  owner       :string
+#  image_hash  :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  flavor_text :string
+#  title       :string
+#
 class TestItem < ApplicationRecord
   has_one_attached :image
   has_one_attached :meme_card
