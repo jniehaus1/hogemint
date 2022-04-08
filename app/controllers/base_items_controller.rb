@@ -27,7 +27,9 @@ class BaseItemsController < ApplicationController
   end
 
   def show
-    @base_item = BaseItem.find_by(id: params[:id])
+    @base_item = BaseItem.includes(:sales).find_by(id: params[:id])
+    sale = @base_item.sales.first
+    @receipt = sale&.np_receipt
   end
 
   def check_session_pw

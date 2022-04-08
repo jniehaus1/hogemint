@@ -28,20 +28,18 @@ class SalesController < ApplicationController
   end
 
   def new_checkout(checkout_partial)
-    order_response = NowPayments::CreatePayment.call(item: @item)
-    return render_failed_api if order_response["payment_status"] != "waiting"
+    @gas_price = Etherscan::GasStation.gas_price()
+    order_response = NowPayments::CreateInvoice.call(item: @item, gas_price: @gas_price)
+    return render_failed_api if order_response["message"].present?
 
     @sale = Sale.create(sale_params(order_response))
     return render_failed_sale_create if @sale.errors.present?
 
-    render checkout_partial, locals: { pay_address: order_response["pay_address"], gas_price: Etherscan::GasStation.gas_price, pay_status: "waiting" }
+    render checkout_partial, locals: { pay_address: order_response["invoice_url"], gas_price: @gas_price, returning_checkout: false }
   end
 
   def return_checkout(checkout_partial)
-    order_response = NowPayments::Status.call(sale: @sale)
-
-    return render_failed_return if order_response["message"].present? # Nothing found or bad URL
-    render checkout_partial, locals: { pay_address: order_response["pay_address"], gas_price: Etherscan::GasStation.gas_price, pay_status: order_response["payment_status"] }
+    render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: Etherscan::GasStation.gas_price, returning_checkout: true }
   end
 
   def render_no_item
@@ -49,25 +47,34 @@ class SalesController < ApplicationController
   end
 
   def render_failed_api
-    @error_messages = ["Failed to create your order. Return to #{item_url(@item)} after contacting support@hoge.finance to finish the nft creation process."]
+    msg = "Failed to create your order. Return to #{item_url(@item)} after contacting support@hoge.finance to finish the nft creation process."
+    Rails.logger.error(msg)
+    @error_messages = [msg]
   end
 
   def render_failed_return
-    @error_messages = ["Failed to find your order in our payment processor. Please contact support@hoge.finance with your NFT link handy for help. #{item_url(@item)}"]
+    msg = "Failed to find your order in our payment processor. Please contact support@hoge.finance with your NFT link handy for help. #{item_url(@item)}"
+    Rails.logger.error(msg)
+    @error_messages = [msg]
   end
 
   def render_failed_sale_create
-    @error_messages = @sale.errors.full_messages.merge("Return to #{item_url(@item)} after contacting support to finish the nft creation process.")
+    msg = "Return to #{item_url(@item)} after contacting support to finish the nft creation process."
+    Rails.logger.error(msg)
+    @error_messages = @sale.errors.full_messages.merge(msg)
   end
 
   private
 
   def sale_params(order_response)
-    { quantity:     1,
-      gas_for_mint: ENV["MINT_GAS_LIMIT"],
-      gas_price:    Etherscan::GasStation.gas_price,
-      payment_id:   order_response["payment_id"],
+    {
       nft_asset:    @item,
-      nft_owner:    @item.owner }
+      nft_owner:    @item.owner,
+      quantity:     1,
+      gas_for_mint: ENV["MINT_GAS_LIMIT"],
+      gas_price:    @gas_price,
+      invoice_url:  order_response["invoice_url"],
+      merchant_order_id: @sale
+    }
   end
 end

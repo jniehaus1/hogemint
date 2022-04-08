@@ -53,11 +53,11 @@ class CallbacksController < ApplicationController
   #
   # payment_status: [waiting, confirming, confirmed, sending, partially_paid, finished, failed, refunded, expired]
   def now_payments
-    Rails.logger.info("RECEIVED NOWPAYMENTS CALLBACK: #{params}")
+    Rails.logger.info("RECEIVED NOWPAYMENTS CALLBACK")
 
     return nil if params[:message].present?
 
-    sale = Sale.find_by(payment_id: np_params[:payment_id])
+    sale = Sale.find_by(merchant_order_id: np_params[:order_id])
     return nil if sale.blank?
 
     # Move to canceled state

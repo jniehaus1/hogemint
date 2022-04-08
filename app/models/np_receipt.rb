@@ -18,6 +18,7 @@
 #  outcome_currency  :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  sale_id           :integer
 #
 class NpReceipt < ApplicationRecord
   belongs_to :sale

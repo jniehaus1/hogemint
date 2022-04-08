@@ -21,12 +21,18 @@ module NowPayments
     include ApplicationService
     include Rails.application.routes.url_helpers
 
-    def initialize(item:)
+    def initialize(item:, gas_price:)
       @item = item
+      @gas_price = gas_price
     end
 
     # https://documenter.getpostman.com/view/7907941/S1a32n38?version=latest#5e37f3ad-0fa1-4292-af51-5c7f95730486
     def call
+      eth = ENV["GAS_TO_CHARGE"].to_i * @gas_price * 1e-9
+      # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc
+      estimate_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{eth}&currency_from=eth&currency_to=usd", { headers: headers })
+      @price_amount = estimate_response["estimated_amount"]
+
       HTTParty.post("#{ENV["NP_API_URL"]}/v1/payment", {
           body: post_params.to_json,
           headers: headers
@@ -36,15 +42,16 @@ module NowPayments
     private
 
     def post_params
-      { :price_amount     => 50,
+      # :price_amount     => @price_amount,
+      { :price_amount     => 59,
         :price_currency   => 'USD',
-        :pay_currency     => 'ETH',
+        :pay_currency     => 'XLM',
         :ipn_callback_url => ENV["NP_CALLBACK_URL"]
       }
     end
 
     def headers
-      { "x-api-key"    => ENV["NP_SANDBOX_API_KEY"],
+      { "x-api-key"    => ENV["NP_API_KEY"],
         'Content-Type' => 'application/json'}
     end
   end

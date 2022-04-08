@@ -1,4 +1,8 @@
-<h3>Save this image and URL to come back and view your digital asset</h3>
+<h4>Save this image and URL to come back and view your digital asset</h4>
 <div class="viewport">
   <%= image_tag fix_s3_link(@base_item.image), alt: "NOOOOOOO", class: "image meme_card" if @base_item.image.present? %>
 </div>
+
+<% if @receipt.blank? %>
+  Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_base_checkout_url(@base_item) %> to check the status of your order.
+<% end %>

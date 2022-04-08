@@ -28,8 +28,8 @@ class BaseItem < ApplicationRecord
     self.uri = SecureRandom.hex(16)
   end
 
-  def cg_order_id
-    "CG_ORDER_#{self.id}"
+  def order_id
+    "BASEITEM_#{self.id}"
   end
 
   def generation

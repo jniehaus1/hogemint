@@ -34,7 +34,7 @@ module NowPayments
     private
 
     def headers
-      { "x-api-key"    => ENV["NP_SANDBOX_API_KEY"],
+      { "x-api-key"    => ENV["NP_API_KEY"],
         'Content-Type' => 'application/json'}
     end
   end
