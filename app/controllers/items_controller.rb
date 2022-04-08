@@ -15,8 +15,14 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
-    @item.save
+    @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
+
+    if @item.blank?
+      @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
+      @item.save
+    else
+      @error_messages = ["You've already started making an NFT, please continue with the checkout process."]
+    end
 
     return render_failed_item_create unless @item.persisted?
 

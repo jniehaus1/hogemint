@@ -59,7 +59,7 @@
           </table>
         </div>
       <% end %>
-      <%= button_to "Delete and Start Over", item_url(@item), method: :delete, class: "btn btn-danger" %>
+      <%= button_to "Delete and Start Over", item_url(@item), method: :delete, class: "btn btn-danger" if @item.sales.first.new? %>
     </div>
   </div>
 <% end %>
