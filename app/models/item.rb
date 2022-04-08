@@ -8,6 +8,7 @@
 #  updated_at :datetime         not null
 #  uri        :string
 #  owner      :string
+#  image_hash :string
 #
 class Item < ApplicationRecord
   has_one_attached :image
@@ -18,6 +19,8 @@ class Item < ApplicationRecord
   validate :owner_matches_signed_msg
   validate :owner_is_unique
   validate :owner_has_hoge
+  validate :meme_is_unique
+  validate :printer_is_live
 
   before_create :generate_uri
   after_create  :generate_meme_card
@@ -34,7 +37,7 @@ class Item < ApplicationRecord
   end
 
   def generate_uri
-    # stuff
+    self.uri = SecureRandom.uuid
   end
 
   def owner_matches_signed_msg
@@ -57,6 +60,14 @@ class Item < ApplicationRecord
     throw(:abort)
   end
 
+  def meme_is_unique
+    image_hash = Digest::MD5.hexdigest(self.image.download)
+    return nil unless Item.find_by(image_hash: image_hash).present?
+
+    errors.add(:base, "Image has already been turned into a meme! Your image must be unique.")
+    throw(:abort)
+  end
+
   def key_owner
     Eth::Utils.public_key_to_address(key_from_msg)
   end
@@ -65,11 +76,18 @@ class Item < ApplicationRecord
     Eth::Key.personal_recover(MSG_PREFIX + nonce, signed_msg)
   end
 
+  def printer_is_live
+    return nil if ENV["PRINTER_IS_LIVE"] == "true"
+
+    errors.add(:base, "Server is in test mode. Please use alternate test urls.")
+    throw(:abort)
+  end
+
   def generate_meme_card
     if image.attached?
       im = Magick::Image.from_blob(image.download)
       im = im[0].resize_to_fit(531) # Template size
-      im_template = Magick::Image.read("data/card_template.jpg")
+      im_template = Magick::Image.read("data/pics/card_template.jpg")
 
       x_coord = ((531 - im.columns.to_i) / 2) + 81
       y_coord = ((531 - im.rows.to_i) / 2) + 189
