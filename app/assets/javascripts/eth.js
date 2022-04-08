@@ -56,6 +56,7 @@ App = {
 
     addToForm: function(signedMsg) {
         $("#item_signed_msg").val(signedMsg);
+        $("#test_item_signed_msg").val(signedMsg);
     }
 };
 

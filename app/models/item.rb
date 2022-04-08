@@ -69,10 +69,12 @@ class Item < ApplicationRecord
   end
 
   def key_owner
+    # Assert validations
     Eth::Utils.public_key_to_address(key_from_msg)
   end
 
   def key_from_msg
+    # Assert validations
     Eth::Key.personal_recover(MSG_PREFIX + nonce, signed_msg)
   end
 
