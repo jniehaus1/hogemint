@@ -38,36 +38,36 @@ services:
       - '6379:6379'
     volumes:
       - 'redis-data:/var/lib/redis/data'
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL}'
-      PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD}'
-      PGADMIN_LISTEN_PORT: '${PGADMIN_LISTEN_PORT}'
-      PGDATA: /var/lib/postgresql/data
-    volumes:
-      - 'pga-data:/var/lib/pgadmin'
-    links:
-      - 'db:pgsql-server'
-    ports:
-      - '8080:80'
-    depends_on:
-      - db
-  geth:
-    container_name: geth
-    image: ethereum/client-go
-    command: '--syncmode "light" --http --http.api=eth,web3,debug,txpool,admin --http.port=8545 --http.addr=0.0.0.0'
-    ports:
-      - '8545:8545'
-    volumes:
-      - 'geth-data:/root/.ethereum/geth/lightchaindata'
+  #pgadmin:
+  #  image: dpage/pgadmin4
+  #  environment:
+  #    PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL}'
+  #    PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD}'
+  #    PGADMIN_LISTEN_PORT: '${PGADMIN_LISTEN_PORT}'
+  #    PGDATA: /var/lib/postgresql/data
+  #  volumes:
+  #    - 'pga-data:/var/lib/pgadmin'
+  #  links:
+  #    - 'db:pgsql-server'
+  #  ports:
+  #    - '8080:80'
+  #  depends_on:
+  #    - db
+  #geth:
+  #  container_name: geth
+  #  image: ethereum/client-go
+  #  command: '--syncmode "light" --http --http.api=eth,web3,debug,txpool,admin --http.port=8545 --http.addr=0.0.0.0'
+  #  ports:
+  #    - '8545:8545'
+  #  volumes:
+  #    - 'geth-data:/root/.ethereum/geth/lightchaindata'
 volumes:
-  geth-data:
-    driver: local
+  #geth-data:
+  #  driver: local
   db-data:
     driver: local
-  pga-data:
-    driver: local
+  #pga-data:
+  #  driver: local
   app-gems:
     driver: local
   redis-data:
