@@ -208,6 +208,18 @@ p, ul, li, a {
   border-radius: 20px;
   background: #1b1b1b;
   text-align: center;
+
+  @media(max-width: 968px) {
+      position: static;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      margin-bottom: 60px;
+      border-radius: 0;
+      margin-top: -1rem;
+      padding-top: 30px;
+      
+  }
 }
 
 // home
