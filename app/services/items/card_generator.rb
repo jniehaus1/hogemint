@@ -53,14 +53,14 @@ module Items
 
       ##
       # URI
-      uri_width = 537
+      uri_width = 520
       uri_height = 50
       uri_x_offset = 105
       uri_y_offset = 1040
 
       uri_container = Magick::Image.read("caption:#{@item.uri}") {
         self.font = 'Times-New-Roman'
-        self.pointsize = 30
+        self.pointsize = 28
         self.stroke = 'transparent'
         self.fill   = '#FAFAFA'
         self.background_color = 'transparent'

@@ -33,12 +33,6 @@ class TestItem < ApplicationRecord
   # May be ethereum prefixed on production
   MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
 
-  class << self
-    def find_by_uri(uri: uri)
-      Item.find_by(uri: uri)
-    end
-  end
-
   def generate_uri
     self.uri = SecureRandom.uuid
   end
