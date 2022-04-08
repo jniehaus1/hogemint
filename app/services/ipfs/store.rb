@@ -28,11 +28,11 @@ module Ipfs
 
     def uri_hash(response)
       {
-        "name":        item.uri_name,
+        "name":        @item.uri_name,
         "image":       "ipfs://#{response['IpfsHash']}",
         "description": "Minted from the crucible of based memes.",
-        "nft_url":     item_url(item),
-        "created_at":  item.created_at
+        # "nft_url":     item_url(@item),
+        "created_at":  @item.created_at
       }
     end
   end

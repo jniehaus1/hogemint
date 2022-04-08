@@ -1,6 +1,5 @@
 const Web3Modal = window.Web3Modal.default;
 const WalletConnectProvider = window.WalletConnectProvider.default;
-const Fortmatic = window.Fortmatic;
 const evmChains = window.evmChains;
 
 // Web3modal instance
@@ -10,10 +9,13 @@ let provider;
 // Address of the selected account
 let selectedAccount;
 
+let numberRetries = 5;
+let confirmationFlag = false;
+let guid;
+
 function init() {
     console.log("Initializing example");
     console.log("WalletConnectProvider is", WalletConnectProvider);
-    console.log("Fortmatic is", Fortmatic);
     console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
 
     // Check that the web page is run in a secure context,
@@ -198,7 +200,6 @@ async function onDisconnect() {
 
 async function signMessage() {
     if (provider === undefined) {
-        await init();
         await onConnect();
     }
 
@@ -221,16 +222,77 @@ async function addToForm(signedMsg) {
     $("#test_item_signed_msg").val(signedMsg);
 }
 
+async function confirmWithServer(confirmationNumber, receipt, retryNum, nonce, signedMsg) {
+    if (retryNum > numberRetries) return;
+
+    if (confirmationNumber > 5 && !confirmationFlag) {
+        showTx.innerHTML = "Transaction Completed!";
+        confirmationFlag = true;
+        $.ajax({
+            type: "POST",
+            url: $("#callback_url").html(),
+            data: {receipt: receipt, node: ethereum.networkVersion, nonce: nonce, signed_msg: signedMsg},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+            },
+            success: (data) => {
+              if (data["retry"]) {
+                console.log("Unable to confirm transfer from server, retrying...");
+                sleep(1000);
+                confirmWithServer(confirmationNumber, receipt, retryNum + 1);
+              } else {
+              // Do success stuff
+              }
+            },
+        error: (data) => {
+            console.log("Error communicating with server.");
+            console.log(data)
+          }
+        })
+    }
+}
+
+
+async function generateNft(custodial_wallet, matic_fees) {
+    if (provider === undefined) {
+        await onConnect();
+    }
+
+    web3 = new Web3(provider);
+
+    let showTx = $("#showTx");
+    let nonce = $("#nonce").val();
+    let signed_msg = $("#signed_msg").val();
+
+    await confirmWithServer(8, 1, 0, "nonce", "signed_msg");
+
+    // web3.eth.getAccounts( function (err, accounts) {
+    //     $("#loading_spinner").removeClass("d-none");
+    //     web3.eth.sendTransaction({from: accounts[0],
+    //         to: custodial_wallet,
+    //         gas: "21000",
+    //         value: web3.utils.toWei(matic_fees, 'ether')})
+    //         .on('transactionHash', function(hash){
+    //             showTx.html("TX: " + hash);
+    //         })
+    //         .on('receipt', function(receipt){
+    //             showTx.html("Confirming receipt.");
+    //         })
+    //         .on('confirmation', function(confirmationNumber, receipt){
+    //             confirmWithServer(confirmationNumber, receipt, 0, nonce, signed_msg);
+    //             $("#loading_spinner").addClass("d-none");
+    //         })
+    //         .on('error', function(error) {
+    //             console.error(error);
+    //             showTx.html("User Canceled.");
+    //             $("#loading_spinner").addClass("d-none");
+    //         });
+    // })
+}
 
 /**
  * Main entry point.
  */
-window.addEventListener('load', async () => {
-    init();
-    document.querySelector("#btn-connect").addEventListener("click", onConnect);
-    document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
-});
-
 document.addEventListener("DOMContentLoaded", function(event) {
     init();
 });

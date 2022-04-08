@@ -26,8 +26,9 @@ Rails.application.routes.draw do
   get 'guide',    to: 'statics#guide'
   get 'support',  to: 'statics#support'
 
-  post 'callback/coingate', to: 'callbacks#coingate'
+  post 'callback/coingate',    to: 'callbacks#coingate'
   post 'callback/nowpayments', to: 'callbacks#now_payments'
+  post 'callback/polygon',     to: 'callbacks#polygon'
 
   devise_for :users, controllers: { sessions: 'admin/sessions', passwords: 'admin/passwords' }, skip: [:registrations]
 

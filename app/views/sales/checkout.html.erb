@@ -16,158 +16,50 @@
         <div class="checkout-container__information-side__inner">
           <h4 class="text-center">**You are not done yet!**</h4>
           <p>Add gas to the mint to have your NFT minted.</p>
-          <p>HogeMint uses NOWPayments to process transactions.</p>
           <p class="lead">Checkout Details</p>
+
           <div class="table-responsive">
             <table class="table table-dark">
               <tbody>
               <tr>
-                <td class="align-middle" data-toggle="tooltip" data-placement="top" title="Gas price determined by Etherscan Gas Tracker">Gas Price</td>
-                <td>
-                  <span id="gas-price-span"><%= gas_price %> gwei </span><span class="input-group-append mx-2"><button class="btn btn-outline-secondary" id="reset-gas-btn" type="button">Reset</button></span><span id="loading_spinner" class="d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                </td>
-              </tr>
-              <tr>
-                <td>Mint Gas Amount</td>
-                <td><%= number_with_delimiter(ENV["MINT_GAS_LIMIT"], delimiter: ",") %> gas</td>
-              </tr>
-              <tr>
-                <td>Other Mint Fees</td>
-                <td>~0.0075 ETH</td>
-              </tr>
-              <tr class="table-secondary">
-                <td>Total Cost</td>
-                <td id="total-cost-text"><%= number_with_delimiter(mint_price, :delimiter => ',') %> USD</td>
+                <td data-toggle="tooltip" data-placement="top" title="Covers minting cost and server fees.">Minting Cost</td>
+                <td><%= mint_price %> MATIC</td>
               </tr>
               </tbody>
             </table>
           </div>
-          <hr>
-          <p>Follow the link to complete your payment:</p>
-              <p id="pay-address-link">
-                <a href="<%= pay_address %>" target="_blank" rel="noopener noreferrer"><%= pay_address %></a>
-              </p>
-            <p style="margin-bottom: 10px">When you have finished, continue to view your NFT asset: </p>
-            <%= link_to "Continue", item_url(@item), class: "btn btn-primary" %>
-          <% if returning_checkout %>
-            <p style="margin-top: 16px">If you have already started a payment, you can see the status below. If you believe there has been a mistake, reach out to support@hoge.finance.</p>
-          <% end %>
-          <% unless payment_status["message"].present? %>
-            Payment underway!<br>
-            <div class="table-responsive mt-2">
-              <table class="table table-dark">
-                <tbody>
-                <tr>
-                  <td>Status</td>
-                  <td><%= payment_status["payment_status"].upcase %></td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          <% end %>
-        </div>
 
+          <p>Follow the link to complete your payment:</p>
+          <div class="form-group my-3">
+            <button type="button" id="generate-nft-btn" class="btn btn-secondary">Generate NFT!</button>
+          </div>
+          <p>Tx Status: <span id="showTx"></span></p>
+
+          <p style="margin-bottom: 10px; margin-top: 10px;">When you have finished, continue to view your NFT asset: </p>
+          <%= link_to "View NFT", item_url(@item), class: "btn btn-primary" %>
+        </div>
       </div>
     </div>
   <% end %>
 </div>
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h1>Web3modal example for vanille JavaScript and HTML</h1>
 
-      <p>No wallet connected. Connect wallet to show accounts and their ETH balances.</p>
-
-      <div class="alert alert-danger" id="alert-error-https" style="display: none">
-        You can run this example only over HTTPS connection.
-      </div>
-
-      <div id="prepare">
-        <button class="btn btn-primary" id="btn-connect">
-          Connect wallet
-        </button>
-      </div>
-
-      <div id="connected" style="display: none">
-
-        <button class="btn btn-primary" id="btn-disconnect">
-          Disconnect wallet
-        </button>
-
-        <hr>
-
-        <div id="network">
-          <p>
-            <strong>Connected blockchain:</strong> <span id="network-name"></span>
-          </p>
-
-          <p>
-            <strong>Selected account:</strong> <span id="selected-account"></span>
-          </p>
-
-        </div>
-
-        <hr>
-
-        <h3>All account balances</h3>
-
-        <table class="table table-listing">
-          <thead>
-          <th>Address</th>
-          <th>ETH balance</th>
-          </thead>
-
-          <tbody id="accounts">
-          </tbody>
-        </table>
-
-        <p>Please try to switch between different accounts in your wallet if your wallet supports this functonality.</p>
-
-      </div>
-
-      <br>
-
-      <div class="well">
-        <p class="text-muted">See also the <a href="https://web3modal.com/">TypeScript and React example application</a></p>
-      </div>
-
-    </div>
-  </div>
-</div>
+<form>
+  <span id="callback_url" class="d-none"><%= callback_polygon_url %></span>
+  <input type="hidden" value="<%= @nonce %>" id="nonce">
+  <input type="hidden" value="" id="signed_msg">
+</form>
 
 <script>
-  <% if @error_messages.present? %>
-    $("#modal_errors").removeClass("d-none");
-    <% @error_messages.each do |msg| %>
-      $("#modal_errors ul").append("<li> <%= msg %> </li>");
+    <% if @error_messages.present? %>
+      $("#modal_errors").removeClass("d-none");
+      <% @error_messages.each do |msg| %>
+        $("#modal_errors ul").append("<li> <%= msg %> </li>");
+      <% end %>
     <% end %>
-  <% end %>
 
-  $("#reset-gas-btn").on("click", function() {
-      $("#loading_spinner").removeClass("d-none");
-      answer = confirm("Please confirm that you are ABSOLUTELY SURE you want to do this. Do not abuse this feature! Go to https://etherscan.io/gastracker and wait for low gas prices before refreshing over and over!!!!!");
-      if (answer) {
-          $.ajax({
-              type: "POST",
-              url: "<%= reset_gas_url %>",
-              data: { id: window.location.pathname.replace("/sales/checkout/", "") },
-              beforeSend: function (xhr) {
-                  xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-              },
-              success: function (data) {
-                  $("#gas-price-span").html(data["gas_price"] + " gwei");
-                  $("#pay-address-link").html('<a href="' + data["invoice_url"] + '" target="_blank" rel="noopener noreferrer">' + data["invoice_url"] + '</a>');
-                  $("#total-cost-text").html(data["mint_price"] + " ETH");
-                  $("#loading_spinner").addClass("d-none");
-              },
-              error: (data) => {
-                  console.log("Error communicating with server.");
-                  console.log(data)
-                  $("#loading_spinner").addClass("d-none");
-              }
-          })
-      } else {
-          $("#loading_spinner").addClass("d-none");
-      }
-  })
+    document.addEventListener("DOMContentLoaded", function(event) {
+        $("#generate-nft-btn").on('click', function () {
+            generateNft(<%= ENV["CUSTODIAL_WALLET"] %>, <%= ENV["MATIC_FEES"] %>);
+        });
+    })
 </script>

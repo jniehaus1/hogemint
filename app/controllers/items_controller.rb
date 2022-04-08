@@ -16,9 +16,6 @@ class ItemsController < ApplicationController
   end
 
   def create
-    # TODO - reconsider checkout flow for same wallet
-    # @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
-
     if @item.blank?
       @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
       @item.save

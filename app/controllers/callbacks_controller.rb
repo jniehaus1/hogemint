@@ -1,6 +1,11 @@
 class CallbacksController < ApplicationController
   protect_from_forgery with: :null_session, if: Proc.new {|c| c.request.format.json?}
 
+  def polygon
+    Rails.logger.info("RECEIVED POLYGON CALLBACK")
+    Rails.logger.info(params.to_s)
+  end
+
   # Example Callback:
   # {
   # "payment_id":5077125051,
