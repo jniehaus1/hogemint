@@ -5,10 +5,10 @@ class BaseItemsController < ApplicationController
   # Will implement devise in the future.
   def login
     if params[:password] == ENV["SESSION_PW"]
-      session[:pw] = "sexy-beast"
+      session[:pw] = ENV["SESSION_PW"]
       redirect_to new_base_item_url
     else
-      redirect_to "new_session"
+      redirect_to new_session_url
     end
   end
 
@@ -37,7 +37,7 @@ class BaseItemsController < ApplicationController
   end
 
   def check_session_pw
-    redirect_to :new_session if session[:pw] != "sexy-beast"
+    redirect_to :new_session if session[:pw] != ENV["SESSION_PW"]
   end
 
   private
