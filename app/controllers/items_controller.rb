@@ -53,10 +53,6 @@ class ItemsController < ApplicationController
     @sale = @item.sales.first
   end
 
-  def edit
-    @item = Item.find_by(id: params[:id])
-  end
-
   private
 
   def uri_name(item)
