@@ -83,6 +83,6 @@ class Item < ApplicationRecord
   end
 
   def order_id
-    "ITEM_00_#{self.id}"
+    "#{ENV["NP_LOCAL_POISON"]}ITEM_00_#{self.id}"
   end
 end

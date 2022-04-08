@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   get 'sales/checkout/:id', to: 'sales#checkout', as: 'sales_checkout'
   get 'sales/base_checkout/:id', to: 'sales#base_checkout', as: 'sales_base_checkout'
+  post 'sales/reset_gas', to: 'sales#reset_gas', as: 'reset_gas'
 
   # base_item URLs
   get  '/new_session', to: 'base_items#new_session'

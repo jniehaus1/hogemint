@@ -55,6 +55,20 @@ class SalesController < ApplicationController
                                        payment_status:     payment_status }
   end
 
+  def reset_gas
+    @item = Item.includes(:sales).find(params[:id])
+    @sale = @item.sales.first
+    gas_price = Etherscan::GasStation.gas_price
+    order_response = NowPayments::CreateInvoice.call(item: @item, gas_price: gas_price)
+    @sale.update(gas_price:   gas_price,
+                 mint_price:  order_response["price_amount"],
+                 invoice_url: order_response["invoice_url"])
+
+    render json: { gas_price:   gas_price,
+                   invoice_url: @sale.invoice_url,
+                   mint_price:  @sale.mint_price}, status: 200
+  end
+
   def render_no_item
     @error_messages = ["You are attempting to checkout with an unknown item."]
   end
@@ -98,6 +112,7 @@ class SalesController < ApplicationController
     }
   end
 
+  # For Generation One corrections to nil mint prices
   def fix_mint_price(gas_price)
     eth = ENV["MINT_GAS_LIMIT"].to_i * gas_price * 1e-9
     # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc

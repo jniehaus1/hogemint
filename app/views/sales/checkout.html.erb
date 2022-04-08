@@ -22,33 +22,31 @@
             <table class="table table-dark">
               <tbody>
               <tr>
-                <td data-toggle="tooltip" data-placement="top" title="Gas price determined by Etherscan Gas Tracker">Gas Price</td>
-                <td><%= gas_price %> gwei</td>
+                <td class="align-middle" data-toggle="tooltip" data-placement="top" title="Gas price determined by Etherscan Gas Tracker">Gas Price</td>
+                <td>
+                  <span id="gas-price-span"><%= gas_price %> gwei </span><span class="input-group-append mx-2"><button class="btn btn-outline-secondary" id="reset-gas-btn" type="button">Reset</button></span><span id="loading_spinner" class="d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </td>
               </tr>
               <tr>
                 <td>Mint Gas Amount</td>
                 <td><%= number_with_delimiter(ENV["MINT_GAS_LIMIT"], delimiter: ",") %> gas</td>
               </tr>
               <tr>
-                <td>Estimated Mint Fees</td>
-                <td>0.007 ETH</td>
+                <td>Other Mint Fees</td>
+                <td>~0.0075 ETH</td>
               </tr>
               <tr class="table-secondary">
-                <td>Cost</td>
-                <td><%= number_with_delimiter(mint_price, :delimiter => ',') %> ETH</td>
+                <td>Total Cost</td>
+                <td id="total-cost-text"><%= number_with_delimiter(mint_price, :delimiter => ',') %> ETH</td>
               </tr>
               </tbody>
             </table>
           </div>
           <hr>
           <p>Follow the link to complete your payment:</p>
-            <table class="table table-dark">
-              <tbody>
-              <tr class="table-secondary">
+              <p id="pay-address-link">
                 <a href="<%= pay_address %>" target="_blank" rel="noopener noreferrer"><%= pay_address %></a>
-              </tr>
-              </tbody>
-            </table>
+              </p>
             <p style="margin-bottom: 10px">When you have finished, continue to view your NFT asset: </p>
             <%= link_to "Continue", item_url(@item), class: "btn btn-primary" %>
           <% if returning_checkout %>
@@ -80,4 +78,32 @@
       $("#modal_errors ul").append("<li> <%= msg %> </li>");
     <% end %>
   <% end %>
+
+  $("#reset-gas-btn").on("click", function() {
+      $("#loading_spinner").removeClass("d-none");
+      answer = confirm("Please confirm that you are ABSOLUTELY SURE you want to do this. Do not abuse this feature! Go to https://etherscan.io/gastracker and wait for low gas prices before refreshing over and over!!!!!");
+      if (answer) {
+          $.ajax({
+              type: "POST",
+              url: "<%= reset_gas_url %>",
+              data: { id: window.location.pathname.replace("/sales/checkout/", "") },
+              beforeSend: function (xhr) {
+                  xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+              },
+              success: function (data) {
+                  $("#gas-price-span").html(data["gas_price"] + " gwei");
+                  $("#pay-address-link").html('<a href="' + data["invoice_url"] + '" target="_blank" rel="noopener noreferrer">' + data["invoice_url"] + '</a>');
+                  $("#total-cost-text").html(data["mint_price"] + " ETH");
+                  $("#loading_spinner").addClass("d-none");
+              },
+              error: (data) => {
+                  console.log("Error communicating with server.");
+                  console.log(data)
+                  $("#loading_spinner").addClass("d-none");
+              }
+          })
+      } else {
+          $("#loading_spinner").addClass("d-none");
+      }
+  })
 </script>
