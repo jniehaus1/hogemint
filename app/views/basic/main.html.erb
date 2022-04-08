@@ -1,0 +1,32 @@
+<h1>HogeMint</h1>
+<p>Do you want your one-time newly minted non-fungible token? Add an image below. It will be stamped and added to our repository.
+  The certificate of authenticity will be added to the blockchain.</p>
+
+<%= form_with(model: @item) do |f| %>
+  <% if @item.errors.any? %>
+    Foo
+    <%= binding.pry %>
+    <div id="error_explanation">
+      <ul>
+        <% @item.errors.each do |attr, msg| %>
+          <% binding.pry %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2 class="block-title mb-0 ml-0"><%= f.label :owner, "Asset Owner" %></h2>
+  <div class="form-group">
+    <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
+  </div>
+
+  <h2 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h2>
+  <div class="form-group">
+    <%= f.file_field :image, class: "form-control" %>
+  </div>
+
+  <div class="actions col-sm-12">
+    <%= f.submit "Submit", class: "btn btn-primary float-right" %>
+  </div>
+<% end %>

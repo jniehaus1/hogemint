@@ -13,4 +13,5 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//= require web3/dist/web3.min.js
 //= require_tree .

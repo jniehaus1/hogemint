@@ -1,5 +1,9 @@
 {
   "name": "hogemint",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "jquery": "^3.5.1",
+    "truffle-contract": "^4.0.31",
+    "web3": "^1.3.4"
+  }
 }
