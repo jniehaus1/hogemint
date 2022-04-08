@@ -35,7 +35,7 @@ class CallbacksController < ApplicationController
     return invoice_sale(sale) if np_params[:payment_status] == "waiting" && sale.aasm_state == "new"
 
     # Move to canceled state
-    return cancel_sale(sale) if ["failed", "refunded", "expired"].include?(np_params[:payment_status])
+    # return cancel_sale(sale) if ["failed", "refunded", "expired"].include?(np_params[:payment_status])
 
     # No internal action to take, receipt already exists
     return nil if NpReceipt.find_by(sale_id: sale.id)
