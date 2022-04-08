@@ -47,7 +47,7 @@ module NowPayments
     def post_params
       {
         :price_amount     => mint_price,
-        :price_currency   => 'HOGE',
+        :price_currency   => 'ETH',
         :order_id         => "NP_#{@item.order_id}",
         :ipn_callback_url => ENV["NP_CALLBACK_URL"],
         :success_url      => success_url,
@@ -55,20 +55,18 @@ module NowPayments
       }
     end
 
-    # $25 USD equivalent if gas < $10
-    # else gas + $15
+
+    # Mint Cost: 220000 gas
+    # NOWPayments Cost: 2x Transfer
+    # ETH: 21,000 gas
+    # Hoge: 110,000 gas
+    # Upcharge: $30 USD
     def mint_price
-      eth = ENV["MINT_GAS_LIMIT"].to_i * @gas_price * 1e-9
+      eth = (ENV["MINT_GAS_LIMIT"].to_i + ENV["NOWPAYMENTS_FEE"].to_i).to_f * @gas_price * 1e-9
+
       # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc
-      usd_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{eth}&currency_from=eth&currency_to=usd", { headers: headers })
-      gas_cost = usd_response["estimated_amount"].to_f
-
-      usd_price = gas_cost < 10 ? 25 : (gas_cost + 15)
-      hoge_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{usd_price}&currency_from=usd&currency_to=hoge", { headers: headers })
-
-      (usd_price - gas_cost)
-
-      hoge_response["estimated_amount"].to_f.ceil
+      eth_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{ENV["MINT_UPCHARGE"]}&currency_from=usd&currency_to=eth", { headers: headers })
+      eth_response["estimated_amount"].to_f + eth
     end
 
     def success_url
