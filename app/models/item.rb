@@ -71,6 +71,6 @@ class Item < ApplicationRecord
   end
 
   def order_id
-    "ITEM_#{self.id}"
+    "ITEM_00_#{self.id}"
   end
 end

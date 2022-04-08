@@ -25,18 +25,22 @@ class ItemsController < ApplicationController
     item = Item.find_by(uri: short_uri) || BaseItem.find_by(uri: short_uri)
 
     # Should move image_link call to model & have them share a common interface
-    image_link = if item.is_a?(Item)
-                   fix_s3_link(item&.meme_card)
-                 elsif item.is_a?(BaseItem)
-                   fix_s3_link(item&.image)
-                 else
-                   nil
-                 end
+    image_link = ""
+    nft_url    = ""
+    if item.is_a?(Item)
+      image_link = fix_s3_link(item&.meme_card)
+      nft_url = item_url(item)
+    elsif item.is_a?(BaseItem)
+      image_link = fix_s3_link(item&.image)
+      nft_url = base_item_url(item)
+    end
 
     msg = {
-        "name": uri_name(item),
-        "image": image_link,
-        "description": "Minted from the crucible of based memes."
+        "name":        uri_name(item),
+        "image":       image_link,
+        "description": "Minted from the crucible of based memes.",
+        "nft_url":     nft_url,
+        "created_at":  item.created_at
     }
 
     render json: msg
