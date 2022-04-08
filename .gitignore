@@ -40,3 +40,4 @@ yarn-debug.log*
 .env
 
 items/
+/.vs
