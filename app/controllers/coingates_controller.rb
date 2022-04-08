@@ -15,10 +15,10 @@ class CoingatesController < ApplicationController
     # Move to unpaid state
     return cancel_sale(sale) if coingate_params[:status] == "canceled"
 
-    raise "Coingate callback shows status is not paid: #{coingate_params}" if coingate_params[:status] != "paid"
-
     # Coingate sometimes sends multiple "paid" callbacks.
     return nil if CoinGateReceipt.find_by(sale_id: sale.id)
+
+    raise "Coingate callback shows status is not paid: #{coingate_params}" if coingate_params[:status] != "paid"
 
     sale.pay!
     receipt = CoinGateReceipt.create(coingate_params.merge(sale_id: sale.id))
@@ -37,7 +37,6 @@ class CoingatesController < ApplicationController
 
   def coingate_params
     params.permit(:order_id, :status, :price_amount, :price_currency, :receive_currency, :receive_amount,
-                  :pay_amount, :pay_currency, :underpaid_amount, :overpaid_amount, :is_refundable, :remote_created_at,
-                  :token)
+                  :pay_amount, :pay_currency, :underpaid_amount, :overpaid_amount, :is_refundable, :remote_created_at)
   end
 end
