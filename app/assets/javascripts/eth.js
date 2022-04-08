@@ -1,12 +1,3 @@
-// window.ethereum.enable();
-// web3 = new Web3(window.ethereum);
-// web3.eth.getAccounts(function(error, accounts) { web3.eth.personal.sign("msg", accounts[0]).then(console.log)})
-// web3.eth.personal.ecRecover("msg", "encoded_msg").then(console.log)
-
-function doWeb3Thing() {
-    a = App.init()
-}
-
 App = {
     web3Provider: null,
     contracts: {},
@@ -59,6 +50,3 @@ App = {
     }
 };
 
-$(document).ready( function() {
-    $("#sign_message-btn").on('click', doWeb3Thing);
-});
