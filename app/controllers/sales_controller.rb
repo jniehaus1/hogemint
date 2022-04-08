@@ -17,7 +17,6 @@ class SalesController < ApplicationController
     @item = Item.includes(:sales).find_by(id: params[:id])
     return render_no_item unless @item.present?
 
-    @nonce = SecureRandom.uuid
     @sale = @item.sales.first
     @error_messages = []
 
@@ -34,13 +33,15 @@ class SalesController < ApplicationController
     gas_price = Polygonscan::GasStation.gas_price
     return render_failed_etherscan_api if gas_price.negative?
 
-    @sale = Sale.create(sale_params(gas_price))
+    @nonce = SecureRandom.uuid
+    @sale  = Sale.create(sale_params(gas_price))
     return render_failed_sale_create unless @sale.persisted?
 
     render checkout_partial, locals: { mint_price: @sale.mint_price }
   end
 
   def return_checkout(checkout_partial)
+    @nonce = @sale.nonce
     render checkout_partial, locals: { mint_price: @sale.mint_price }
   end
 
@@ -59,12 +60,13 @@ class SalesController < ApplicationController
 
   def sale_params(gas_price)
     {
-        nft_asset:    @item,
-        nft_owner:    @item.owner,
-        quantity:     1,
         gas_for_mint: ENV["MINT_GAS_LIMIT"],
         gas_price:    gas_price,
         mint_price:   ENV["MATIC_FEES"],
+        nonce:        @nonce,
+        nft_asset:    @item,
+        nft_owner:    @item.owner,
+        quantity:     1
     }
   end
 

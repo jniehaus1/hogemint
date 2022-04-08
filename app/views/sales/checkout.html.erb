@@ -31,7 +31,7 @@
 
           <p>Follow the link to complete your payment:</p>
           <div class="form-group my-3">
-            <button type="button" id="generate-nft-btn" class="btn btn-secondary">Generate NFT!</button>
+            <button type="button" id="submit_tx_btn" class="btn btn-secondary">Generate NFT!</button>
           </div>
           <p>Tx Status: <span id="showTx"></span></p>
 
@@ -58,8 +58,8 @@
     <% end %>
 
     document.addEventListener("DOMContentLoaded", function(event) {
-        $("#generate-nft-btn").on('click', function () {
-            generateNft(<%= ENV["CUSTODIAL_WALLET"] %>, <%= ENV["MATIC_FEES"] %>);
+        $("#submit_tx_btn").on('click', function () {
+            signTx('<%= ENV["CUSTODIAL_WALLET"] %>', '<%= ENV["MATIC_FEES"] %>', '<%= @sale.id %>')
         });
     })
 </script>

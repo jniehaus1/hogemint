@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_13_210135) do
+ActiveRecord::Schema.define(version: 2022_03_09_021525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,19 @@ ActiveRecord::Schema.define(version: 2021_11_13_210135) do
     t.integer "sale_id"
   end
 
+  create_table "polygon_receipts", force: :cascade do |t|
+    t.string "amount"
+    t.integer "item_id"
+    t.string "msg"
+    t.string "nonce"
+    t.integer "sale_id"
+    t.string "signed_msg"
+    t.string "tx_hash"
+    t.string "wallet"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sales", force: :cascade do |t|
     t.integer "quantity"
     t.integer "gas_for_mint"
@@ -144,6 +157,7 @@ ActiveRecord::Schema.define(version: 2021_11_13_210135) do
     t.string "invoice_url"
     t.string "tx_hash"
     t.string "mint_price"
+    t.string "nonce"
   end
 
   create_table "test_items", force: :cascade do |t|

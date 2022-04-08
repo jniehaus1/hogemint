@@ -10,8 +10,9 @@ module Polygonscan
     #     "id":0
     # }
     #
-    def self.verify(tx_hash:, from:)
-      response = HTTParty.post("https://polygon-mainnet.g.alchemyapi.io/v2/#{ENV["ALCHEMY_API_KEY"]}",
+    def self.lookup(tx_hash:)
+      # TODO - swap to polygon-mainnet.g.
+      response = HTTParty.post("https://eth-rinkeby.alchemyapi.io/v2/#{ENV["ALCHEMY_API_KEY"]}",
                                body:    { jsonrpc: "2.0",
                                           method: "eth_getTransactionByHash",
                                           params: [tx_hash],
@@ -20,7 +21,7 @@ module Polygonscan
 
       return nil if response["error"].present?
 
-      return from == response["result"]["from"] && transferred_value(response)
+      response
     end
 
     private

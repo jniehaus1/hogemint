@@ -4,6 +4,27 @@ class CallbacksController < ApplicationController
   def polygon
     Rails.logger.info("RECEIVED POLYGON CALLBACK")
     Rails.logger.info(params.to_s)
+
+    @tx_hash = params[:receipt][:transactionHash]
+    sale = Sale.includes(:nft_asset).find(params[:sale_id])
+    item = sale.nft_asset
+    msg = "This signature helps our server verify the transaction and attribute your nft. Unique Token: #{sale.nonce}"
+
+    raise "Transaction already attributed to sale" if PolygonReceipt.find_by(tx_hash: @tx_hash).present?
+    raise "Signature & Transfer wallet do not match." if key_owner(msg, params[:signed_msg]).downcase != tx_from_wallet.downcase
+    raise "Not enough quid" if tx_value < ENV["MATIC_FEES"].to_f * 1e18
+    raise "Didn't send money to the right wallet" if tx_to_wallet.downcase != ENV["CUSTODIAL_WALLET"].downcase
+
+    PolygonReceipt.create!(amount:     ENV["MATIC_FEES"],
+                           item:       item,
+                           msg:        msg,
+                           nonce:      sale.nonce,
+                           sale:       sale,
+                           signed_msg: params[:signed_msg],
+                           tx_hash:    @tx_hash,
+                           wallet:     tx_from_wallet)
+    sale.pay!
+    # MintWorker.perform_async(sale.id, item.generation)
   end
 
   # Example Callback:
@@ -56,6 +77,30 @@ class CallbacksController < ApplicationController
   end
 
   private
+
+  def key_owner(msg, signed_msg)
+    Eth::Utils.public_key_to_address(key_from_msg(msg, signed_msg))
+  end
+
+  def key_from_msg(msg, signed_msg)
+    Eth::Key.personal_recover(msg, signed_msg)
+  end
+
+  def tx_from_wallet
+    tx_lookup["result"]["from"]
+  end
+
+  def tx_value
+    tx_lookup["result"]["value"].to_i(16)
+  end
+
+  def tx_to_wallet
+    tx_lookup["result"]["to"]
+  end
+
+  def tx_lookup
+    @tx_lookup ||= Polygonscan::TxArbiter.lookup(tx_hash: @tx_hash)
+  end
 
   def cancel_sale(sale)
     sale.cancel!

@@ -43,7 +43,7 @@
           <button type="button" id="sign_message-btn" class="btn btn-secondary">Sign Transaction!</button>
         </div>
         <%= f.hidden_field(:signed_msg) %>
-        <%= f.hidden_field(:nonce, value: @nonce) %>
+        <%= f.hidden_field(:nonce, value: @nonce, id: "nonce") %>
         <%= f.check_box :agreement %> I understand that I only get to submit ONE image, and that after clicking Submit there will be no more attempts to correct the resulting NFT. If I had wanted to practice, I would have gone to<br> <a href="https://hogemint-staging.herokuapp.com/" target="_blank">https://hogemint-staging.herokuapp.com/</a>
         <div class="actions col-sm-12 mt-2">
           <%= f.submit "Submit",
