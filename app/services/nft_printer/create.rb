@@ -2,9 +2,11 @@ module NftPrinter
   class Create
     include ApplicationService
 
-    def initialize(item, owner)
+    def initialize(item, owner, mint_addr, private_key)
       @item  = item
       @owner = owner
+      @mint_address = mint_addr
+      @private_key_str = private_key
     end
 
     def call
@@ -16,13 +18,13 @@ module NftPrinter
     end
 
     def build_contract
-      contract = Ethereum::Contract.create(name: "HogeNFTv2", address: ENV["CONTRACT_ADDRESS"], abi: abi, client: client)
+      contract = Ethereum::Contract.create(name: "HogeNFTv2", address: @mint_address, abi: abi, client: client)
       contract.key = private_key
       contract
     end
 
     def private_key
-      @private_key ||= Eth::Key.new(priv: ENV["MINT_PRIVATE_KEY"])
+      @private_key ||= Eth::Key.new(priv: @private_key_str)
     end
 
     def abi
@@ -42,8 +44,8 @@ module NftPrinter
     def validate_inputs
       raise "No Owner Address" if @owner.blank?
       raise "Nothing to Mint, Item doesn't exist" if @item.blank?
-      raise "No CONTRACT_ADDRESS" if ENV["CONTRACT_ADDRESS"].blank?
-      raise "No MINT_PRIVATE_KEY" if ENV["MINT_PRIVATE_KEY"].blank?
+      raise "No CONTRACT_ADDRESS" if @mint_address.blank?
+      raise "No MINT_PRIVATE_KEY" if @private_key_str.blank?
     end
 
     def validate_uri

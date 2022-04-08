@@ -13,9 +13,9 @@ module Generations
     end
 
     def run_validations
-      # owner_matches_signed_msg
-      # owner_is_unique
-      # owner_has_hoge
+      owner_matches_signed_msg
+      owner_is_unique
+      owner_has_hoge
       image_exists
     end
 
@@ -45,7 +45,7 @@ module Generations
     def owner_has_hoge
       return nil if HOGE_HOLDERS_EXPANSION.include?(@item.owner.hex)
 
-      @item.errors.add(:base, "Owner wallet must have containd HOGE tokens BEFORE WhiteBIT listing March 3rd, 2021.")
+      @item.errors.add(:base, "Owner wallet must have contained HOGE tokens BEFORE May 8th 04:00 UTC")
       throw(:abort)
     end
 

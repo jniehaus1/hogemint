@@ -70,39 +70,12 @@ module Items
 
       im3.composite!(uri_container, uri_x_offset, uri_y_offset, Magick::OverCompositeOp)
 
-      ##
-      # Serial Number
-
-      no_width = 153
-      no_height = 25
-      no_x_offset = 488
-      no_y_offset = 795
-
-      no_container = Magick::Image.read("caption:#{serial_no}") {
-        self.font = 'data/fonts/nasalization-rg.ttf'
-        self.pointsize = 18
-        self.stroke = 'transparent'
-        self.fill   = '#FAFAFA'
-        self.background_color = 'transparent'
-        self.size = "#{no_width}x#{no_height}"
-      }.first
-
-      im3.composite!(no_container, no_x_offset, no_y_offset, Magick::OverCompositeOp)
-
       t = Tempfile.new
       t.binmode
       t.write(im3.to_blob)
       t.rewind
 
       t
-    end
-
-    private
-
-    def serial_no
-      num = @item.id.to_s
-      num = num.rjust(8, '0')
-      num[0..3] + "-" + num[4..7]
     end
   end
 end

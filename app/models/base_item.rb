@@ -31,4 +31,8 @@ class BaseItem < ApplicationRecord
   def cg_order_id
     "CG_ORDER_#{self.id}"
   end
+
+  def generation
+    ENV["CURRENT_GENERATION"]
+  end
 end
