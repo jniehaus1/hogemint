@@ -28,7 +28,9 @@ class SalesController < ApplicationController
   end
 
   def new_checkout(checkout_partial)
-    @gas_price = Etherscan::GasStation.gas_price()
+    @gas_price = Etherscan::GasStation.gas_price
+    return render_failed_etherscan_api if @gas_price.negative?
+
     order_response = NowPayments::CreateInvoice.call(item: @item, gas_price: @gas_price)
     return render_failed_api if order_response["message"].present?
 
@@ -41,11 +43,21 @@ class SalesController < ApplicationController
   def return_checkout(checkout_partial)
     payment_status = NowPayments::Status.call(sale: @sale)
 
+    @gas_price = Etherscan::GasStation.gas_price
+    return render_failed_etherscan_api if @gas_price.negative?
+    @sale.update(gas_price: @gas_price)
+
     render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: @sale.gas_price, returning_checkout: true, payment_status: payment_status }
   end
 
   def render_no_item
     @error_messages = ["You are attempting to checkout with an unknown item."]
+  end
+
+  def rend_failed_etherscan_api
+    msg = "Failed to obtain a gas price for the ethereum network. Please refresh to try again."
+    Rails.logger.error(msg)
+    @error_messages = [msg]
   end
 
   def render_failed_api
