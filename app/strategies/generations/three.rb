@@ -45,7 +45,7 @@ module Generations
     def owner_has_hoge
       return nil if HOGE_HOLDERS_GALAXY.include?(@item.owner.hex)
 
-      @item.errors.add(:base, "Owner wallet must have contained HOGE tokens BEFORE May 31st, 2021 00:00 UTC")
+      @item.errors.add(:base, "Owner wallet must contain HOGE tokens.")
       throw(:abort)
     end
 
