@@ -25,14 +25,12 @@ module NowPayments
     end
 
     def call
-      if ENV["FAKE_INVOICE"] == "true"
-        return fake_invoice
-      else
-        return HTTParty.post("#{ENV["NP_API_URL"]}/v1/invoice", {
-            body: post_params.to_json,
-            headers: headers
-          })
-      end
+      return fake_invoice if ENV["FAKE_INVOICE"] == "true"
+
+      return HTTParty.post("#{ENV["NP_API_URL"]}/v1/invoice", {
+          body: post_params.to_json,
+          headers: headers
+      })
     end
 
     private

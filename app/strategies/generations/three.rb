@@ -6,8 +6,6 @@ module Generations
       @item = item
     end
 
-    def run_validations; end
-
     def generate_card
       Vips::Compile.new(@item).preview
     end
@@ -17,6 +15,7 @@ module Generations
       owner_is_unique
       owner_has_hoge
       image_exists
+      meme_is_unique
     end
 
     def owner_matches_signed_msg
@@ -53,6 +52,14 @@ module Generations
       return nil if @item.image.present?
 
       @item.errors.add(:base, "You must provide an image")
+      throw(:abort)
+    end
+
+    def meme_is_unique
+      image_hash = Digest::MD5.hexdigest(Paperclip.io_adapters.for(@item.image).read)
+      return nil unless Item.find_by(image_hash: image_hash).present?
+
+      @item.errors.add(:base, "Image has already been turned into a meme! Your image must be unique.")
       throw(:abort)
     end
 
