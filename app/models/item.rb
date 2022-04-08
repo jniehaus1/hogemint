@@ -17,9 +17,9 @@ class Item < ApplicationRecord
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
   validates :image, presence: true, blob: { content_type: ['image/png', 'image/jpg', 'image/jpeg'], size_range: 0..5.megabytes }
   validate :owner_matches_signed_msg
-  validate :owner_is_unique
+  # validate :owner_is_unique
   validate :owner_has_hoge
-  validate :meme_is_unique
+  # validate :meme_is_unique
   validate :printer_is_live
 
   before_create :generate_uri

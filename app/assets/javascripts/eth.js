@@ -4,7 +4,6 @@
 // web3.eth.personal.ecRecover("msg", "encoded_msg").then(console.log)
 
 function doWeb3Thing() {
-    console.log("Foo");
     a = App.init()
 }
 
