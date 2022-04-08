@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   post 'callback/coingate', to: 'callbacks#coingate'
   post 'callback/nowpayments', to: 'callbacks#now_payments'
 
+  devise_for :users, controllers: { sessions: 'admin/sessions', passwords: 'admin/passwords' }, skip: [:registrations]
+
   if ENV["PRINTER_IS_LIVE"] == 'true'
     root to: 'items#new'
     get 'items', to: 'items#new'

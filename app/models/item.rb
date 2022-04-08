@@ -22,8 +22,10 @@
 #  generation             :integer
 #  is_flagged             :boolean
 #  processing             :boolean          default(TRUE)
-#  ipfs_file_cid          :string
-#  ipfs_json_cid          :string
+#  ipfs_image_file_cid    :string
+#  ipfs_image_json_cid    :string
+#  ipfs_meme_file_cid     :string
+#  ipfs_meme_json_cid     :string
 #
 class Item < ApplicationRecord
   attr_accessor :agreement
