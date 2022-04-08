@@ -8,12 +8,12 @@ module Items
 
     def call
       im = Magick::Image.from_blob(@item.image.download)
-      im = im[0].resize_to_fit(531) # Template size
+      im = im[0].resize_to_fit(560,579) # Template size
       im_template = Magick::Image.read("data/pics/template_nasa.jpg")
 
       x_coord = ((560 - im.columns.to_i) / 2) + 94
       y_coord = ((579 - im.rows.to_i) / 2) + 211
-      im3 = im_template[0].composite(im,x_coord,y_coord, Magick::OverCompositeOp)
+      im3 = im_template[0].composite(im, x_coord, y_coord, Magick::OverCompositeOp)
 
       title = Magick::Draw.new
 
@@ -31,7 +31,6 @@ module Items
       t.write(im3.to_blob)
       t.rewind
 
-      im3.display
       @item.meme_card.attach(io: t, filename: "#{@item.uri}.jpg", content_type: "image/jpeg")
     end
 
