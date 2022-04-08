@@ -17,6 +17,7 @@ gem 'jquery-rails'
 gem 'webpacker'
 gem 'aws-sdk-s3'
 gem 'ethereum.rb'
+gem 'paperclip'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.4', '>= 5.2.4.3'

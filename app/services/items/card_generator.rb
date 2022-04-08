@@ -7,7 +7,8 @@ module Items
     end
 
     def call
-      im = Magick::Image.from_blob(@item.image.download)
+      image_binary = Paperclip.io_adapters.for(@item.image).read
+      im = Magick::Image.from_blob(image_binary)
       im = im[0].resize_to_fit(548,566) # Template size
       im_template = Magick::Image.read("data/pics/template_nasa_neon.jpg")
 
@@ -93,7 +94,8 @@ module Items
       t.write(im3.to_blob)
       t.rewind
 
-      @item.meme_card.attach(io: t, filename: "#{@item.uri}.png", content_type: "image/png")
+      @item.meme_card = t
+      @item.save(validate: false)
     end
 
     private

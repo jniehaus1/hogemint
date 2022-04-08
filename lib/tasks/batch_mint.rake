@@ -5,7 +5,9 @@ namespace :hoge do
     ARGV.each { |a| task a.to_sym do ; end }
     validate_inputs
     items = Item.where(id: ARGV[1].to_i..ARGV[2].to_i)
+    validate_data(items)
 
+    c = contract
     items.each do |i|
       puts i.owner
     end
@@ -35,5 +37,15 @@ namespace :hoge do
   def validate_inputs
     raise "No CONTRACT_ADDRESS" if ENV["CONTRACT_ADDRESS"].blank?
     raise "No MINT_PRIVATE_KEY" if ENV["MINT_PRIVATE_KEY"].blank?
+  end
+
+  def validate_data(items)
+    raise "Malformed URI" unless all_uris_valid?(items)
+  end
+
+  def all_uris_valid?(items)
+    items.each do |i|
+      raise "Bad URI at ID: #{i.id} URI: #{i.uri}" unless i.uri.match?(/\h{32}/)
+    end
   end
 end

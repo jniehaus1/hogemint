@@ -11,7 +11,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.new(item_params)
+    @item = Item.new(item_params.merge(image_hash))
 
     if @item.save
       redirect_to @item
@@ -37,5 +37,13 @@ class ItemsController < ApplicationController
 
   def item_params
     params.require(:item).permit(:image, :owner, :nonce, :signed_msg, :title, :flavor_text)
+  end
+
+  def image_hash
+    return { image_hash: nil } if item_params[:image].blank?
+
+    myhash = Digest::MD5.hexdigest(item_params[:image].read)
+    item_params[:image].rewind
+    { image_hash: myhash }
   end
 end

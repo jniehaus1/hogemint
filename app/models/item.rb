@@ -13,11 +13,12 @@
 #  title       :string
 #
 class Item < ApplicationRecord
-  has_one_attached :image
-  has_one_attached :meme_card
+  has_attached_file :image
+  has_attached_file :meme_card
 
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
-  validates :image, presence: true, blob: { content_type: ['image/png', 'image/jpg', 'image/jpeg'], size_range: 0..5.megabytes }
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
+
   validate :owner_matches_signed_msg
   validate :owner_is_unique
   validate :owner_has_hoge
@@ -25,7 +26,6 @@ class Item < ApplicationRecord
   validate :printer_is_live
 
   before_create :generate_uri
-  before_create :attach_image_hash
   after_create  :generate_meme_card
 
   attr_accessor :nonce, :signed_msg
@@ -34,7 +34,7 @@ class Item < ApplicationRecord
   MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
 
   def generate_uri
-    self.uri = SecureRandom.uuid
+    self.uri = SecureRandom.hex(32)
   end
 
   def owner_matches_signed_msg
@@ -58,7 +58,7 @@ class Item < ApplicationRecord
   end
 
   def meme_is_unique
-    image_hash = Digest::MD5.hexdigest(self.image.download)
+    image_hash = Digest::MD5.hexdigest(Paperclip.io_adapters.for(self.image).read)
     return nil unless Item.find_by(image_hash: image_hash).present?
 
     errors.add(:base, "Image has already been turned into a meme! Your image must be unique.")
@@ -75,10 +75,6 @@ class Item < ApplicationRecord
     Eth::Key.personal_recover(MSG_PREFIX + nonce, signed_msg)
   end
 
-  def attach_image_hash
-    self.image_hash = Digest::MD5.hexdigest(self.image.download)
-  end
-
   def printer_is_live
     return nil if ENV["PRINTER_IS_LIVE"] == "true"
 
@@ -87,7 +83,7 @@ class Item < ApplicationRecord
   end
 
   def generate_meme_card
-    if image.attached?
+    if image.present?
       Items::CardGenerator.call(self)
     end
   end
