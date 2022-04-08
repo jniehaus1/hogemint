@@ -17,6 +17,11 @@ module NftPrinter
       contract.transact.mint(@owner, @item.uri)
     end
 
+    def resubmit(nonce)
+      contract = build_contract
+      contract.resubmit.mint(nonce, @owner, @item.uri)
+    end
+
     def build_contract
       contract = Ethereum::Contract.create(name: "HogeNFTv2", address: @mint_address, abi: abi, client: client)
       contract.key = private_key
