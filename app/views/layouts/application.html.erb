@@ -46,6 +46,14 @@
 </div>
 <hr>
 <div class="container">
+  <div class="row">
+    <div class="offset-2 col-8">
+      Ethereum Gas Prices | Low: <%= @gas_prices["SafeGasPrice"] %>gwei | Normal: <%= @gas_prices["ProposeGasPrice"] %>gwei | High: <%= @gas_prices["FastGasPrice"] %>gwei
+    </div>
+  </div>
+</div>
+<hr>
+<div class="container">
   <%= yield %>
 </div>
 </body>

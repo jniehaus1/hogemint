@@ -12,6 +12,7 @@ class ItemsController < ApplicationController
   def new
     @item = Item.new
     @nonce = SecureRandom.uuid
+    @gas_prices = Etherscan::GasStation.gas_prices
   end
 
   def create
