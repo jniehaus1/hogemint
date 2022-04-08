@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   # Static URLs
   get 'faq',      to: 'statics#faq'
   get 'guide',    to: 'statics#guide'
+  get 'support',  to: 'statics#support'
 
   post 'callback/coingate', to: 'callbacks#coingate'
   post 'callback/nowpayments', to: 'callbacks#now_payments'

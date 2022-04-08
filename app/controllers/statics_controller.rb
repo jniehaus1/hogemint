@@ -6,4 +6,8 @@ class StaticsController < ApplicationController
   def guide
     render "static/guide"
   end
+
+  def support
+    render "static/support.html.erb"
+  end
 end

@@ -28,7 +28,7 @@ module Vips
 
       # we now know the number of pages in the animation
       n_loaded_pages = gif.height / page_height
-      pages = Array.new(n_loaded_pages - 1)
+      pages = Array.new(n_loaded_pages)
       n_loaded_pages.times do |i|
         pages[i] = gif.crop(0, i * page_height, gif.width, page_height)
       end
