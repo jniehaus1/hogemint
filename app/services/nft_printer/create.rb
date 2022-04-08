@@ -22,7 +22,6 @@ module NftPrinter
       tx = contract.transact.mint(@owner, @item.uri)
 
       sale.update(tx_hash: tx.id)
-      sale.finish_minting!
     end
 
     def resubmit(nonce)
