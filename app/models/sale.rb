@@ -19,6 +19,7 @@
 #  payment_id        :string
 #  invoice_url       :string
 #  tx_hash           :string
+#  mint_price        :string
 #
 class Sale < ApplicationRecord
   include AASM

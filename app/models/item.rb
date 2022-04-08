@@ -21,6 +21,7 @@
 #  meme_card_updated_at   :datetime
 #  generation             :integer
 #  is_flagged             :boolean
+#  processing             :boolean          default(TRUE)
 #
 class Item < ApplicationRecord
   attr_accessor :agreement

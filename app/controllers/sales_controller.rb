@@ -37,14 +37,22 @@ class SalesController < ApplicationController
     @sale = Sale.create(sale_params(order_response))
     return render_failed_sale_create unless @sale.persisted?
 
-    render checkout_partial, locals: { pay_address: order_response["invoice_url"], gas_price: @sale.gas_price, mint_price: order_response["price_amount"], returning_checkout: false, payment_status: { "message" => true } }
+    render checkout_partial, locals: { pay_address:        order_response["invoice_url"],
+                                       gas_price:          @sale.gas_price,
+                                       mint_price:         order_response["price_amount"],
+                                       returning_checkout: false,
+                                       payment_status:     { "message" => true } }
   end
 
   def return_checkout(checkout_partial)
     payment_status = NowPayments::Status.call(sale: @sale)
     fix_mint_price if @sale.mint_price == nil
 
-    render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: @sale.gas_price, mint_price: @sale.mint_price, returning_checkout: true, payment_status: payment_status }
+    render checkout_partial, locals: { pay_address:        @sale.invoice_url,
+                                       gas_price:          @sale.gas_price,
+                                       mint_price:         @sale.mint_price,
+                                       returning_checkout: true,
+                                       payment_status:     payment_status }
   end
 
   def render_no_item
@@ -90,10 +98,6 @@ class SalesController < ApplicationController
     }
   end
 
-  def now_payment_order_id(item)
-    "NP_ORDER_#{item.order_id}"
-  end
-
   def fix_mint_price
     eth = ENV["MINT_GAS_LIMIT"].to_i * @gas_price * 1e-9
     # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc
@@ -103,6 +107,10 @@ class SalesController < ApplicationController
     price = gas_cost < 10 ? 25 : (gas_cost + 15)
 
     @sale.update(mint_price: price)
+  end
+
+  def now_payment_order_id(item)
+    "NP_ORDER_#{item.order_id}"
   end
 
   def headers
