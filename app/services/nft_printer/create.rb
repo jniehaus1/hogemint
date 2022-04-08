@@ -8,7 +8,7 @@ module NftPrinter
 
     def call
       validate_inputs
-      validate_data
+      validate_uri
 
       contract = build_contract
       contract.transact_and_wait.mint(owner, uri)
@@ -33,9 +33,15 @@ module NftPrinter
 
     def client
       @client = Ethereum::HttpClient.new(ENV["ETH_NODE"])
-      @client.gas_limit = 2000000 # In Gas: 2_000_000
-      @client.gas_price = 110000000000 # in Wei: 110_000_000_000
+      @client.gas_limit = ENV["MINT_GAS_LIMIT"].to_i # In Gas: 250000 for example
+      @client.gas_price = gas_price * 1000000000     # in Wei: 110000000000 for example
       @client
+    end
+
+    def gas_price
+      response = HttParty.get("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=#{ENV['ETHERSCAN_API_KEY']}")
+      raise "Could not fetch gas price from Etherscan: #{response}" if response["result"]["ProposeGasPrice"].blank?
+      response["result"]["ProposeGasPrice"].to_i
     end
 
     def validate_inputs
@@ -43,12 +49,8 @@ module NftPrinter
       raise "No MINT_PRIVATE_KEY" if ENV["MINT_PRIVATE_KEY"].blank?
     end
 
-    def validate_data
-      raise "Malformed URI" unless uri_valid?
-    end
-
-    def uri_valid?
-      raise "Bad URI at ID: #{@item.id} URI: #{@item.uri}" unless @item.uri.match?(/\h{16}/)
+    def validate_uri
+      raise "Bad URI at ID: #{@item.id} URI: #{@item.uri}" unless @item.uri.match?(/\h{32}/)
     end
   end
 end

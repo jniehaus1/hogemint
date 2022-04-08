@@ -15,10 +15,16 @@
 class BaseItem < ApplicationRecord
   has_attached_file :image
 
-  has_many :nft_assets, as: :nft_model
+  has_many :sales, as: :nft_asset
 
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
 
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
   validates_attachment_size :image, :less_than => 5.megabytes, :unless => Proc.new { |m| m[:image].nil? }
+
+  before_create :generate_uri
+
+  def generate_uri
+    self.uri = SecureRandom.hex(16)
+  end
 end

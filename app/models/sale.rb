@@ -6,18 +6,21 @@
 #  quantity         :integer
 #  gas_for_mint     :integer
 #  nft_owner        :string
+#  nft_asset_id     :integer
 #  gas_price        :float
 #  status           :string
 #  coingate_receipt :integer
 #  token            :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  aasm_state       :string
+#  nft_asset_type   :string
 #
 class Sale < ApplicationRecord
   include AASM
 
   has_one    :coin_gate_receipt
-  belongs_to :nft_asset
+  belongs_to :nft_asset, polymorphic: true
 
   aasm do
     state :new, initial: true

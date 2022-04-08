@@ -42,18 +42,15 @@ class BaseItemsController < ApplicationController
   private
 
   def render_new_with_errors
-    # Attach errors
-    render :new
+    render "shared/modal_errors", locals: { error_messages: @base_item.errors.full_messages }
   end
 
   def render_failed_coingate_api
-    # Define errors
-    render "base_items/fail"
+    render "shared/modal_errors", locals: { error_messages: "Failed to create order in CoinGate API." }
   end
 
   def render_failed_sale_create
-    # Attach errors
-    render :new
+    render "shared/modal_errors", locals: { error_messages: @sale.errors.full_messages }
   end
 
   def base_item_params
@@ -62,8 +59,9 @@ class BaseItemsController < ApplicationController
 
   def sale_params(order_response)
     { quantity:     1,
-      gas_for_mint: ENV["GAS_FOR_MINT"],
+      gas_for_mint: ENV[ "GAS_FOR_MINT"],
       gas_price:    ENV["GAS_PRICE"],
-      token:        order_response.token }
+      token:        order_response.token,
+      nft_asset:    @base_item }
   end
 end

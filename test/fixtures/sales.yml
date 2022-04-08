@@ -6,12 +6,15 @@
 #  quantity         :integer
 #  gas_for_mint     :integer
 #  nft_owner        :string
+#  nft_asset_id     :integer
 #  gas_price        :float
 #  status           :string
 #  coingate_receipt :integer
 #  token            :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  aasm_state       :string
+#  nft_asset_type   :string
 #
 
 # This model initially had no columns defined. If you add columns to the

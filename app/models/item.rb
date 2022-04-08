@@ -25,7 +25,7 @@ class Item < ApplicationRecord
   has_attached_file :image
   has_attached_file :meme_card
 
-  has_many :nft_assets, as: :nft_model
+  has_many :sales, as: :nft_asset
 
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
