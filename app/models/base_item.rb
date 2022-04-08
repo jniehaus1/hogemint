@@ -27,4 +27,8 @@ class BaseItem < ApplicationRecord
   def generate_uri
     self.uri = SecureRandom.hex(16)
   end
+
+  def cg_order_id
+    "CG_ORDER_#{self.id}"
+  end
 end
