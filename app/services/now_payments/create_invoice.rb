@@ -48,7 +48,7 @@ module NowPayments
       {
         :price_amount     => mint_price,
         :price_currency   => 'ETH',
-        :order_id         => "NP_#{@item.order_id}",
+        :order_id         => "NP_ORDER_#{@item.order_id}",
         :ipn_callback_url => ENV["NP_CALLBACK_URL"],
         :success_url      => success_url,
         :cancel_url       => root_url
