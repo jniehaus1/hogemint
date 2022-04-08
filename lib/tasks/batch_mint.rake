@@ -26,13 +26,13 @@ namespace :hoge do
   end
 
   def contract
-    contract = Ethereum::Contract.create(name: "HogeNFT", address: ENV["CONTRACT_ADDRESS"], abi: abi, client: client)
+    contract = Ethereum::Contract.create(name: "HogeNFT", address: ENV["GEN_ONE_MINT_ADDRESS"], abi: abi, client: client)
     contract.key = private_key
     contract
   end
 
   def private_key
-    @private_key ||= Eth::Key.new(priv: ENV["MINT_PRIVATE_KEY"])
+    @private_key ||= Eth::Key.new(priv: ENV["GEN_ONE_MINT_PRIVATE_KEY"])
   end
 
   def abi
@@ -43,15 +43,15 @@ namespace :hoge do
   end
 
   def client
-    @client = Ethereum::HttpClient.new(ENV["ETH_NODE"])
+    @client = Ethereum::HttpClient.new(ENV["GEN_ONE_ETH_NODE"])
     @client.gas_limit = 2000000 # In Gas: 2_000_000
     @client.gas_price = ARGV[3].to_i # in GWei: 110 => 110_000_000_000
     @client
   end
 
   def validate_inputs
-    raise "No CONTRACT_ADDRESS" if ENV["CONTRACT_ADDRESS"].blank?
-    raise "No MINT_PRIVATE_KEY" if ENV["MINT_PRIVATE_KEY"].blank?
+    raise "No CONTRACT_ADDRESS" if ENV["GEN_ONE_MINT_ADDRESS"].blank?
+    raise "No MINT_PRIVATE_KEY" if ENV["GEN_ONE_MINT_PRIVATE_KEY"].blank?
   end
 
   def validate_data(items)
