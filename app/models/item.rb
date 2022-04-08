@@ -23,12 +23,15 @@
 #  is_flagged             :boolean
 #
 class Item < ApplicationRecord
+  attr_accessor :agreement
+
   has_attached_file :image
   has_attached_file :meme_card
 
   has_many :sales, as: :nft_asset, dependent: :destroy
 
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
+  validates :agreement, acceptance: true
 
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
   validates_attachment :image, presence: true, size: { less_than: 5.megabytes }
