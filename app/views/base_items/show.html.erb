@@ -1,8 +1,61 @@
-<h4>Save this image and URL to come back and view your digital asset</h4>
-<div class="viewport">
-  <%= image_tag fix_s3_link(@base_item.image), alt: "NOOOOOOO", class: "image meme_card" if @base_item.image.present? %>
+<div id="nft-container">
+  <div id="fancy-box">
+    <% if @receipt.present? %>
+      <h3>Your NFT has been minted!</h3>
+    <% end %>
+    <%= image_tag fix_s3_link(@base_item.image), alt: "NOOOOOOO", class: "image meme_card" if @base_item.image.present? %>
+
+    <p class="mx-2">Save the page address to come back and view it later:</p>
+    <div class="address-container">
+      <div id="code" class="page">
+        <input id="page-address" class="address" value="http://current-page-address" readonly>
+        <div id="copy-address" class="copy">
+          <b aria-hidden="true" data-copytarget="#page-address">Copy</b>
+        </div>
+      </div>
+    </div>
+    <% if @receipt.blank? %>
+      <p class="mx-2">Finish paying gas to get your nft minted! <%= link_to "Checkout", sales_base_checkout_url(@base_item), class: "btn btn-primary" %></p>
+    <% end %>
+
+  </div>
 </div>
 
-<% if @receipt.blank? %>
-  Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_base_checkout_url(@base_item) %> to check the status of your order.
-<% end %>
+<script>
+    // Puts the current page address into the box
+    document.getElementById("page-address").value = window.location.href
+
+    // trigger copy event on click
+    $('#copy-address').on('click', function(event) {
+        console.log(event);
+        copyToClipboard(event);
+    });
+
+    // event handler
+    function copyToClipboard(e) {
+        var
+            t = e.target,
+            c = t.dataset.copytarget,
+            inp = (c ? document.querySelector(c) : null);
+        console.log(inp);
+        // check if input element exist and if it's selectable
+        if (inp && inp.select) {
+            // select text
+            inp.select();
+            try {
+                // copy text
+                document.execCommand('copy');
+                inp.blur();
+
+                // copied animation
+                t.classList.add('copied');
+                setTimeout(function() {
+                    t.classList.remove('copied');
+                }, 1500);
+            } catch (err) {
+                //fallback in case exexCommand doesnt work
+                alert('please press Ctrl/Cmd+C to copy');
+            }
+        }
+    }
+</script>
