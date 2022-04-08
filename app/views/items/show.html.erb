@@ -1,18 +1,119 @@
-<div class="row">
-  <h3>Save this image and URL to come back and view your Trading Card!</h3>
-</div>
-<div class="row mt-2">
-  <div class="col-md-6">
-    <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image meme_card" %><br>
-    <div class="offset-2">
-      <%= link_to "Metadata", item_uri_url(@item.uri) %>
+<div id="message">Your NFT has been minted!</div>
+<div id="card-section">
+  <div id="card-container">
+    <div id="card-controller">
+      <div id="card-sleeve" class="glow">
+        <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", id: "card" %><br>
+      </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <% if @item.can_remint? && ENV["ALLOW_REMINT"] %>
-      <%= render "shared/remint_first_gen" %>
-    <% elsif @sale.blank? || @sale.new? %>
-      Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_checkout_url(@item) %> to check the status of your order.
-    <% end %>
+  <div id="card-information">
+    <div id="card-title"><%= @item.title %></div>
+    <div id="card-flavour-text"><%= @item.flavor_text %></div>
+    <div id="card-wallet">URI: <%= @item.uri %></div>
+    <div id="card-stats">
+      <div id="card-mint-date" class="card-stat" stat="<%= @item.created_at.strftime("%Y-%m-%d") %>">Mint Date: </div>
+      <div id="card-generation" class="card-stat" stat="<%= @item.generation.capitalize %>">Generation: </div>
+    </div>
+    <div>
+      <% if @item.can_remint? && ENV["ALLOW_REMINT"] %>
+        <%= render "shared/remint_first_gen" %>
+      <% elsif @sale.blank? || @sale.new? %>
+        Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_checkout_url(@item) %> to check the status of your order.
+      <% end %>
+    </div>
   </div>
 </div>
+<script type="text/javascript">
+    (function() {
+        // Tilt effect
+
+        // Init
+        var container = document.querySelector("#card-controller");
+        var inner = document.querySelector("#card-sleeve");
+
+        // Mouse
+        var mouse = {
+            _x: 0,
+            _y: 0,
+            x: 0,
+            y: 0,
+            updatePosition: function(event) {
+                var e = event || window.event;
+                this.x = e.clientX - this._x;
+                this.y = (e.clientY - this._y) * -1;
+            },
+            setOrigin: function(e) {
+                this._x = e.offsetLeft + Math.floor(e.offsetWidth / 2);
+                this._y = e.offsetTop + Math.floor(e.offsetHeight / 2);
+            },
+            show: function() {
+                return "(" + this.x + ", " + this.y + ")";
+            }
+        };
+
+        // Track the mouse position relative to the center of the container.
+        mouse.setOrigin(container);
+
+        //-----------------------------------------
+
+        var counter = 0;
+        var updateRate = 10;
+        var isTimeToUpdate = function() {
+            return counter++ % updateRate === 0;
+        };
+
+        //-----------------------------------------
+
+        var onMouseEnterHandler = function(event) {
+            inner.style.transition = "transform .25s";
+            update(event);
+        };
+
+        var onMouseLeaveHandler = function() {
+            var style = "rotateX(" + 0 + "deg) rotateY(" + 0 + "deg)";
+            inner.style.transition = "transform .75s";
+            inner.style.transform = style;
+        };
+
+        var onMouseMoveHandler = function(event) {
+            if (isTimeToUpdate()) {
+                update(event);
+            }
+        };
+
+        //-----------------------------------------
+
+        var update = function(event) {
+            mouse.updatePosition(event);
+            updateTransformStyle(
+                (mouse.y / inner.offsetHeight / 2).toFixed(2),
+                (mouse.x / inner.offsetWidth / 2).toFixed(2)
+            );
+        };
+
+        var updateTransformStyle = function(x, y) {
+            var style = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
+            inner.style.transform = style;
+            inner.style.webkitTransform = style;
+            inner.style.mozTransform = style;
+            inner.style.msTransform = style;
+            inner.style.oTransform = style;
+        };
+
+        //-----------------------------------------
+
+        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+        if (width > 600) {
+            container.onmouseenter = onMouseEnterHandler;
+            container.onmouseleave = onMouseLeaveHandler;
+            container.onmousemove = onMouseMoveHandler;
+
+            // Shine effect
+            document.querySelector("#card-sleeve").addEventListener("mousemove", function(e) {
+                this.style.setProperty('--x', -e.offsetX + "px");
+                this.style.setProperty('--y', -e.offsetY + "px");
+            });
+        }
+    })();
+</script>

@@ -15,7 +15,7 @@
       </div>
     </div>
     <% if @receipt.blank? %>
-      <p class="mx-2">Finish paying gas to get your nft minted! <%= link_to "Checkout", sales_base_checkout_url(@base_item), class: "btn btn-primary" %></p>
+      <p class="mx-2">Finish paying gas to get your nft minted! <%= link_to "Checkout", sales_base_checkout_url(@base_item) %></p>
     <% end %>
 
   </div>
