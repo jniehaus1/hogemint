@@ -35,7 +35,8 @@ class ItemsController < ApplicationController
 
     msg = {
         "name": uri_name(item),
-        "image": image_link,
+        # "image": image_link,
+        "image": "https://www.hogemint.com/blank.jpeg",
         "description": "Minted from the crucible of based memes."
     }
 
