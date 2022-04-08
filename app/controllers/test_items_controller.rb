@@ -18,8 +18,7 @@ class TestItemsController < ItemsController
     if @item.save
       redirect_to @item
     else
-      flash[:item_errors] = @item.errors.full_messages
-      render "shared/modal_errors", locals: { error_messages: @item.errors.full_messages }
+      render "shared/modal_warnings", locals: { warning_messages: @item.errors.full_messages }
     end
   end
 

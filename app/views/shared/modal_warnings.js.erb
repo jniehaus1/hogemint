@@ -1,0 +1,6 @@
+<%# Your modal must contain an HTML <div id="modal_errors"> tag with a nested <ul> tag %>
+$("#modal_warnings ul li").remove();
+<% warning_messages.each do |msg| %>
+  $("#modal_warnings ul").append("<li> <%= msg %> </li>");
+<% end %>
+$("#modal_warnings").removeClass("d-none");

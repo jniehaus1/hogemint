@@ -1,7 +1,11 @@
 <h1>HogeMint</h1>
+<% unless ENV["PRINTER_IS_LIVE"] == "true" %>
+  <h2>Test Mode Engaged</h2>
+<% end %>
 <p>Do you want your one-time newly minted non-fungible token? Add an image below. It will be stamped and added to our repository.
   The certificate of authenticity will be added to the blockchain.</p>
 <div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
+<div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
 <%= form_with(model: @item) do |f| %>
   <div class="form-group row">
     <h2><%= f.label :owner, "Asset Owner" %></h2>

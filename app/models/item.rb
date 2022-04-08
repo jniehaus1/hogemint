@@ -14,7 +14,7 @@ class Item < ApplicationRecord
   has_one_attached :image
   has_one_attached :meme_card
 
-  validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "Must be a valid wallet address" }
+  validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
   validates :image, presence: true, blob: { content_type: ['image/png', 'image/jpg', 'image/jpeg'], size_range: 0..5.megabytes }
   validate :owner_matches_signed_msg
   validate :owner_is_unique
@@ -23,6 +23,7 @@ class Item < ApplicationRecord
   validate :printer_is_live
 
   before_create :generate_uri
+  before_create :attach_image_hash
   after_create  :generate_meme_card
 
   attr_accessor :nonce, :signed_msg
@@ -43,25 +44,26 @@ class Item < ApplicationRecord
   def owner_matches_signed_msg
     return nil if key_owner == owner
 
-    errors.add(:owner, "does not match signed message. Did you use the correct wallet?")
+    errors.add(:base, "Owner does not match signed message. Did you use the correct wallet?")
   end
 
   def owner_is_unique
     return nil unless Item.find_by(owner: owner).present?
 
-    errors.add(:owner, "asset address must be unique. It has already been used!")
+    errors.add(:base, "Owner address has already been used!")
     throw(:abort)
   end
 
   def owner_has_hoge
     return nil if HOGE_HOLDERS.include?(owner.hex)
 
-    errors.add(:owner, "Wallet address must contain HOGE tokens.")
+    errors.add(:base, "Owner wallet must contain HOGE tokens.")
     throw(:abort)
   end
 
   def meme_is_unique
     image_hash = Digest::MD5.hexdigest(self.image.download)
+    binding.pry
     return nil unless Item.find_by(image_hash: image_hash).present?
 
     errors.add(:base, "Image has already been turned into a meme! Your image must be unique.")
@@ -76,6 +78,10 @@ class Item < ApplicationRecord
   def key_from_msg
     # Assert validations
     Eth::Key.personal_recover(MSG_PREFIX + nonce, signed_msg)
+  end
+
+  def attach_image_hash
+    self.image_hash = Digest::MD5.hexdigest(self.image.download)
   end
 
   def printer_is_live
