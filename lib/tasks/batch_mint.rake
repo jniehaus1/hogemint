@@ -6,7 +6,7 @@ namespace :hoge do
     validate_inputs
     items = Item.where(id: ARGV[1].to_i..ARGV[2].to_i)
     validate_data(items)
-
+    
     c = contract
 
     puts "Owners:"
@@ -22,7 +22,7 @@ namespace :hoge do
     end
 
     puts "Minting"
-    c.transact_and_wait.mint_batch(owners, uris)
+    # c.transact_and_wait.mint_batch(owners, uris)
   end
 
   def contract
