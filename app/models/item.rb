@@ -67,7 +67,7 @@ class Item < ApplicationRecord
   end
 
   def can_remint?
-    generation == "one" && Sale.find_by(nft_asset: self).blank?
+    generation == "one" && Sale.find_by(nft_asset: self).blank? && ENV["ALLOW_REMINT"] == "true"
   end
 
   def order_id
