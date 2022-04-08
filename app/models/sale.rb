@@ -16,7 +16,8 @@
 class Sale < ApplicationRecord
   include AASM
 
-  has_one :coin_gate_receipt
+  has_one    :coin_gate_receipt
+  belongs_to :nft_asset
 
   aasm do
     state :new, initial: true
