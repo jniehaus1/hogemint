@@ -30,7 +30,7 @@ class Sale < ApplicationRecord
     state :canceled, :invoiced, :paid, :minting, :failed_to_mint, :done
 
     event :invoice do
-      transitions from: :new, to: :paid
+      transitions from: :new, to: :invoiced
     end
 
     event :pay do
