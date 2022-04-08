@@ -8,7 +8,7 @@ class MintWorker
     nft_asset = sale.nft_asset
     if generation == "two"
       NftPrinter::Create.call(nft_asset, sale.nft_owner, mint_address(generation), private_key(generation))
-      sale.finish_minting!
+      sale.submit_tx!
     elsif generation == "one"
       NftPrinter::CreateGenOne.call(nft_asset, sale.nft_owner, mint_address(generation), private_key(generation))
       sale.finish_minting!

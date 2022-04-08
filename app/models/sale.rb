@@ -29,7 +29,7 @@ class Sale < ApplicationRecord
 
   aasm do
     state :new, initial: true
-    state :canceled, :invoiced, :paid, :minting, :failed_to_mint, :done
+    state :canceled, :invoiced, :paid, :minting, :pending_tx, :failed_to_mint, :done
 
     event :invoice do
       transitions from: :new, to: :invoiced
@@ -47,12 +47,16 @@ class Sale < ApplicationRecord
       transitions from: [:paid, :failed_to_mint], to: :minting
     end
 
+    event :submit_tx do
+      transitions from: :minting, to: :pending_tx
+    end
+
     event :fail_minting do
-      transitions from: :minting, to: :failed_to_mint
+      transitions from: [:minting, :pending_tx], to: :failed_to_mint
     end
 
     event :finish_minting do
-      transitions from: :minting, to: :done
+      transitions from: :pending_tx, to: :done
     end
   end
 end
