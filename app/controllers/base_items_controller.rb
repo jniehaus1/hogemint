@@ -1,5 +1,5 @@
 class BaseItemsController < ApplicationController
-  before_action :check_session_pw, except: [:new_session, :login]
+  before_action :check_session_pw, except: [:new_session, :login, :show]
 
   # I know it's bad, and I just don't care right now.
   # Will implement devise in the future.
@@ -18,9 +18,24 @@ class BaseItemsController < ApplicationController
     @base_item = BaseItem.new
   end
 
-  def create; end
+  def create
+    @base_item = BaseItem.create(base_item_params)
 
-  def show; end
+    unless @base_item.persisted?
+      render :new
+    else
+      order_response = CoinGate::Orders::Create.call(item: @base_item)
+      if order_response.status == "new"
+        render "base_items/create", locals: { coingate_url: order_response.payment_url }
+      else
+        render  "base_items/fail"
+      end
+    end
+  end
+
+  def show
+    @base_item = BaseItem.find_by(id: params[:id])
+  end
 
   def check_session_pw
     redirect_to :new_session if session[:pw] != "sexy-beast"

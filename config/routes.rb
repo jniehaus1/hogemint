@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   get 'faq',      to: 'statics#faq'
   get 'guide',    to: 'statics#guide'
 
+  post 'coingate/callback', to: 'coingates#callback'
+
   if ENV["PRINTER_IS_LIVE"] == 'true'
     root to: 'items#new'
     resources :items, only: [:new, :create]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_26_025141) do
+ActiveRecord::Schema.define(version: 2021_03_31_195320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,21 @@ ActiveRecord::Schema.define(version: 2021_03_26_025141) do
     t.datetime "image_updated_at"
   end
 
+  create_table "coin_gate_receipts", force: :cascade do |t|
+    t.string "token"
+    t.string "status"
+    t.string "price_currency"
+    t.string "price_amount"
+    t.string "receive_currency"
+    t.string "receive_amount"
+    t.string "remote_created_at"
+    t.string "order_id"
+    t.string "payment_url"
+    t.integer "sale_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.integer "token_id"
     t.datetime "created_at", null: false
@@ -69,6 +84,19 @@ ActiveRecord::Schema.define(version: 2021_03_26_025141) do
 
   create_table "nft_assets", force: :cascade do |t|
     t.integer "nft_model_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.integer "quantity"
+    t.integer "gas_for_mint"
+    t.string "nft_owner"
+    t.integer "nft_asset_id"
+    t.float "gas_price"
+    t.string "status"
+    t.integer "coingate_receipt"
+    t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
