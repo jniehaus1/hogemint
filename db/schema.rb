@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_04_224956) do
+ActiveRecord::Schema.define(version: 2021_04_11_033918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,7 +92,6 @@ ActiveRecord::Schema.define(version: 2021_04_04_224956) do
     t.string "nft_owner"
     t.integer "nft_asset_id"
     t.float "gas_price"
-    t.string "status"
     t.integer "coingate_receipt"
     t.string "token"
     t.datetime "created_at", null: false

@@ -24,13 +24,23 @@ class ItemsController < ApplicationController
   end
 
   def uri
-    item = Item.find_by(uri: short_uri)
+    item = Item.find_by(uri: short_uri) || BaseItem.find_by(uri: short_uri)
+
+    # Should move image_link call to model & have them share a common interface
+    image_link = if item.is_a?(Item)
+                   fix_s3_link(item&.meme_card)
+                 elsif item.is_a?(BaseItem)
+                   fix_s3_link(item&.image)
+                 else
+                   nil
+                 end
 
     msg = {
-      "name": "Hoge Foundation NFT",
-      "image": fix_s3_link(item&.meme_card),
-      "description": "Minted from the crucible of based memes."
+        "name": "Hoge Foundation NFT",
+        "image": image_link,
+        "description": "Minted from the crucible of based memes."
     }
+
     render json: msg
   end
 

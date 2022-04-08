@@ -35,7 +35,7 @@ module NftPrinter
     def client
       @client = Ethereum::HttpClient.new(ENV["ETH_NODE"])
       @client.gas_limit = ENV["MINT_GAS_LIMIT"].to_i # In Gas: 250000 for example
-      @client.gas_price = Etherscan::GasStation.gas_price * 1000000000     # in Wei: 110000000000 for example
+      @client.gas_price = Etherscan::GasStation.gas_price * 1000000000 # in Wei: 110000000000 for example
       @client
     end
 

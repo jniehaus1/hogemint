@@ -7,10 +7,8 @@ Rails.application.routes.draw do
   resources :base_items, only: [:new, :create, :show]
 
   get '/uri/:id', to: 'items#uri'
-
   get  '/new_session', to: 'base_items#new_session'
   post '/login',       to: 'base_items#login'
-
   get 'faq',      to: 'statics#faq'
   get 'guide',    to: 'statics#guide'
 
@@ -23,5 +21,7 @@ Rails.application.routes.draw do
     root to: 'test_items#new'
   end
 
-  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
+  if Rails.env == "development"
+    mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
+  end
 end
