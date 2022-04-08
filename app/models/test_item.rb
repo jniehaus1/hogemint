@@ -2,15 +2,24 @@
 #
 # Table name: test_items
 #
-#  id          :bigint           not null, primary key
-#  token_id    :integer
-#  uri         :string
-#  owner       :string
-#  image_hash  :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  flavor_text :string
-#  title       :string
+#  id                     :bigint           not null, primary key
+#  token_id               :integer
+#  uri                    :string
+#  owner                  :string
+#  image_hash             :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  flavor_text            :string
+#  title                  :string
+#  image_file_name        :string
+#  image_content_type     :string
+#  image_file_size        :bigint
+#  image_updated_at       :datetime
+#  meme_card_file_name    :string
+#  meme_card_content_type :string
+#  meme_card_file_size    :bigint
+#  meme_card_updated_at   :datetime
+#  generation             :integer
 #
 class TestItem < ApplicationRecord
   has_attached_file :image

@@ -2,15 +2,24 @@
 #
 # Table name: items
 #
-#  id          :bigint           not null, primary key
-#  token_id    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  uri         :string
-#  owner       :string
-#  image_hash  :string
-#  flavor_text :string
-#  title       :string
+#  id                     :bigint           not null, primary key
+#  token_id               :integer
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  uri                    :string
+#  owner                  :string
+#  image_hash             :string
+#  flavor_text            :string
+#  title                  :string
+#  image_file_name        :string
+#  image_content_type     :string
+#  image_file_size        :bigint
+#  image_updated_at       :datetime
+#  meme_card_file_name    :string
+#  meme_card_content_type :string
+#  meme_card_file_size    :bigint
+#  meme_card_updated_at   :datetime
+#  generation             :integer
 #
 class Item < ApplicationRecord
   has_attached_file :image
@@ -19,60 +28,22 @@ class Item < ApplicationRecord
   validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
 
-  validate :owner_matches_signed_msg
-  validate :owner_is_unique
-  validate :owner_has_hoge
-  validate :meme_is_unique
   validate :printer_is_live
+  validate :run_validations
 
   before_create :generate_uri
   after_create  :generate_meme_card
 
+  enum generation: {
+      zero: 0,
+      one:  1,
+      two:  2
+  }
+
   attr_accessor :nonce, :signed_msg
 
-  # May be ethereum prefixed on production
-  MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
-
   def generate_uri
-    self.uri = SecureRandom.hex(32)
-  end
-
-  def owner_matches_signed_msg
-    return nil if key_owner == owner
-
-    errors.add(:base, "Owner does not match signed message. Did you use the correct wallet?")
-  end
-
-  def owner_is_unique
-    return nil unless Item.find_by(owner: owner).present?
-
-    errors.add(:base, "Owner address has already been used!")
-    throw(:abort)
-  end
-
-  def owner_has_hoge
-    return nil if HOGE_HOLDERS.include?(owner.hex)
-
-    errors.add(:base, "Owner wallet must have containd HOGE tokens BEFORE WhiteBIT listing March 3rd, 2021.")
-    throw(:abort)
-  end
-
-  def meme_is_unique
-    image_hash = Digest::MD5.hexdigest(Paperclip.io_adapters.for(self.image).read)
-    return nil unless Item.find_by(image_hash: image_hash).present?
-
-    errors.add(:base, "Image has already been turned into a meme! Your image must be unique.")
-    throw(:abort)
-  end
-
-  def key_owner
-    # Assert validations
-    Eth::Utils.public_key_to_address(key_from_msg)
-  end
-
-  def key_from_msg
-    # Assert validations
-    Eth::Key.personal_recover(MSG_PREFIX + nonce, signed_msg)
+    self.uri = SecureRandom.hex(32)[0..31]
   end
 
   def printer_is_live
@@ -83,8 +54,14 @@ class Item < ApplicationRecord
   end
 
   def generate_meme_card
-    if image.present?
-      Items::CardGenerator.call(self)
-    end
+    generation_instance.new(item: self).generate_card
+  end
+
+  def run_validations
+    generation_instance.new(item: self).run_validations
+  end
+
+  def generation_instance
+    @generation_instance ||= "Generations::#{generation.classify}".constantize
   end
 end

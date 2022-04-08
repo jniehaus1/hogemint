@@ -13,7 +13,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.new(item_params.merge(image_hash))
+    @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
 
     if @item.save
       redirect_to @item
@@ -41,10 +41,6 @@ class ItemsController < ApplicationController
   def edit
     @item = Item.find_by(id: params[:id])
   end
-
-  def update; end
-
-  def delete; end
 
   private
 
