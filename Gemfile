@@ -20,7 +20,6 @@ gem 'ethereum.rb'
 gem 'web3-eth'
 gem 'paperclip'
 gem 'httparty'
-gem 'coingate'
 gem 'aasm'
 gem 'sidekiq'
 gem 'ruby-vips'
@@ -46,6 +45,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 group :development, :test do
   gem 'pry-rails'
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'ffaker'
 end
 
 group :development do

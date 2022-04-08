@@ -2,9 +2,9 @@ module NftPrinter
   class Create
     include ApplicationService
 
-    def initialize(item, owner, mint_addr, private_key)
-      @item  = item
-      @owner = owner
+    def initialize(sale, mint_addr, private_key)
+      @sale  = sale
+      @item  = sale.nft_asset
       @mint_address = mint_addr
       @private_key_str = private_key
       @gas_price = Etherscan::GasStation.gas_price
@@ -12,21 +12,19 @@ module NftPrinter
 
     def call
       raise "Gas too high" if @gas_price > 150
-      sale = @item.sales.first
-      raise "Gas much higher than invoice" if @gas_price > (sale.gas_price * 1.15)
+      raise "Gas much higher than invoice" if @gas_price > (@sale.gas_price * 1.15)
 
       validate_inputs
       validate_uri
 
       contract = build_contract
-      tx = contract.transact.mint(@owner, @item.uri)
-
-      sale.update(tx_hash: tx.id)
+      tx = contract.transact.mint(@item.owner, @item.uri)
+      @sale.update(tx_hash: tx.id)
     end
 
     def resubmit(nonce)
       contract = build_contract
-      contract.resubmit.mint(nonce, @owner, @item.uri)
+      contract.resubmit.mint(nonce, @item.owner, @item.uri)
     end
 
     def build_contract
@@ -54,7 +52,7 @@ module NftPrinter
     end
 
     def validate_inputs
-      raise "No Owner Address" if @owner.blank?
+      raise "No Owner Address" if @item.owner.blank?
       raise "Nothing to Mint, Item doesn't exist" if @item.blank?
       raise "No CONTRACT_ADDRESS" if @mint_address.blank?
       raise "No MINT_PRIVATE_KEY" if @private_key_str.blank?

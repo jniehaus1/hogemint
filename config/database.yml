@@ -32,3 +32,12 @@ production:
   password: <%= ENV["DB_PASS"] %>
   template: template0
 
+test:
+  adapter:  postgresql
+  host:     localhost
+  encoding: unicode
+  database: <%= ENV["DATABASE_NAME"] %>_test
+  pool:     5
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASS"] %>
+  template: template0

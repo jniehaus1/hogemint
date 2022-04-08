@@ -6,9 +6,8 @@ module Generations
       @item = item
     end
 
-    def generate_card
-      @item.meme_card = @item.image
-      @item.save(validate: false)
-    end
+    def generate_card; end
+
+    def run_after_create; end
   end
 end
