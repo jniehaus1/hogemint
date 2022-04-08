@@ -83,7 +83,7 @@
 
 <!-- Assume jQuery is loaded -->
 <script>
-    $("#sign_message-btn").on('click', App.init);
+    $("#sign_message-btn").on('click', signMessage);
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -104,4 +104,16 @@
       <% end %>
       $("#modal_errors").removeClass("d-none");
     <% end %>
+</script>
+
+<!-- We use simple <template> templating for the example -->
+<div id="templates" style="display: none">
+  <template id="template-balance">
+    <tr>
+      <th class="address"></th>
+      <td class="balance"></td>
+    </tr>
+  </template>
+</div>
+<script>
 </script>

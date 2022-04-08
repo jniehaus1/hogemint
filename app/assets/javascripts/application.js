@@ -17,5 +17,7 @@
 //= require bootstrap
 //= require jquery
 //= require web3/dist/web3.min.js
+//= require @walletconnect/web3-provider/dist/umd/index.min.js
+//= require evm-chains/dist/umd/index.min.js
 //= require web3modal/dist/index.js
 //= require_tree .
