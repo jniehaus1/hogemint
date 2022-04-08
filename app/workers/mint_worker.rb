@@ -8,13 +8,13 @@ class MintWorker
     nft_asset = sale.nft_asset
     if generation == "two"
       NftPrinter::Create.call(nft_asset, sale.nft_owner, mint_address(generation), private_key(generation))
+      sale.finish_minting!
     elsif generation == "one"
       NftPrinter::CreateGenOne.call(nft_asset, sale.nft_owner, mint_address(generation), private_key(generation))
     else
+      sale.fail_minting!
       raise "Cannot mint, not generation 1 or 2."
     end
-
-    sale.finish_minting!
   rescue Timeout::Error => e
     Rails.logger.error("Timed out minting sale #{sale.id}: #{e}")
   rescue StandardError => e
