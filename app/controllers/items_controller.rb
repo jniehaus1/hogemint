@@ -4,7 +4,7 @@ class ItemsController < ApplicationController
   MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: "
 
   def index
-    @items = Item.all
+    @items = Item.all.reject { |item| item.is_flagged }
   end
 
   def new
