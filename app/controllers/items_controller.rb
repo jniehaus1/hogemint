@@ -15,7 +15,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
+    # @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
 
     if @item.blank?
       @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
@@ -57,18 +57,6 @@ class ItemsController < ApplicationController
   def show
     @item = Item.includes(:sales).find_by(id: params[:id])
     @sale = @item.sales.first
-  end
-
-  def destroy
-    @item = Item.includes(:sales).find(params[:id])
-
-    if @item.sales.first.new?
-      @item.image.destroy
-      @item.meme_card.destroy
-      @item.destroy
-    end
-
-    redirect_to :root
   end
 
   private

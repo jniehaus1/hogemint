@@ -47,7 +47,7 @@ module Vips
     def preview
       image_binary = Paperclip.io_adapters.for(@item.image).read
       meme_image = Vips::Image.new_from_buffer(image_binary, "")
-      target_size = 466 # Take from template
+      target_size = meme_image.height > meme_image.width ? 466 : 451
 
       scale = [target_size.to_f / meme_image.width, target_size.to_f / meme_image.height].min
       meme_image = meme_image.resize(scale, kernel: :nearest) # resize to fit a inside target_size by target_size box
@@ -66,11 +66,11 @@ module Vips
                       gif.height
                     end
 
-      page = gif.crop(0, i * page_height, gif.width, page_height) # Grab first image of gif
+      page = gif.crop(0, 0, gif.width, page_height) # Grab first image of gif
       page = page.composite(rgba_embed, "over")      # Add picture
       page = page.composite(rmagick_overlay, "over") # Add text
 
-      page.write_to_buffer ".png"
+      StringIO.new(page.write_to_buffer ".png")
     end
 
     def rmagick_overlay
@@ -131,6 +131,7 @@ module Vips
       im3.composite!(uri_container, uri_x_offset, uri_y_offset, Magick::OverCompositeOp)
       im3.format = "PNG"
 
+      # Creates a file-like object that can be handled by Paperclip
       Vips::Image.new_from_buffer(im3.to_blob, "")
     end
   end

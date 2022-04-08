@@ -5,7 +5,7 @@
     <div class="col-sm-6">
       <p>Your meme trading card has been created!</p>
       <p>To complete the process and have the Non-Fungible Token minted, you must provide gas to the mint.</p>
-      <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image meme_card" %>
+      <%= image_tag meme_image_url(@item), alt: "<Can not display image>", class: "image meme_card" %>
     </div>
 
     <div class="col-sm-4">
@@ -59,7 +59,6 @@
           </table>
         </div>
       <% end %>
-      <%= button_to "Delete and Start Over", item_url(@item), method: :delete, class: "btn btn-danger" if @sale.new? %>
     </div>
   </div>
 <% end %>
