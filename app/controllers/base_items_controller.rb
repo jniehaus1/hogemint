@@ -32,6 +32,16 @@ class BaseItemsController < ApplicationController
     @receipt = sale&.np_receipt
   end
 
+  def skip_payment
+    @base_item = BaseItem.includes(:sales).find_by(id: params[:id])
+    sale = @base_item.sales.first
+    sale.invoice!
+    sale.pay!
+    MintWorker.perform_async(sale.id, sale.nft_asset.generation)
+
+    redirect_to base_item_url(@base_item)
+  end
+
   def check_session_pw
     redirect_to :new_session if session[:pw] != ENV["SESSION_PW"]
   end

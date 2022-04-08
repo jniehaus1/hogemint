@@ -35,19 +35,33 @@
       </table>
       </div>
       <hr>
+      <p>Follow the link to complete your payment:</p>
+      <table class="table table-dark">
+        <tbody>
+        <tr class="table-secondary">
+          <td><a href="<%= pay_address %>" target="_blank" rel="noopener noreferrer"><%= pay_address %></a></td>
+        </tr>
+        </tbody>
+      </table>
+      <p>When you have finished, continue to view your NFT asset: <%= link_to "Continue", base_item_url(@item), class: "btn btn-primary" %></p>
       <% if returning_checkout %>
-        <p>Follow the link to complete your payment:</p>
-        <table class="table table-dark">
-          <tbody>
-          <tr class="table-secondary">
-            <td><a target="_blank" rel="noopener noreferrer" href="<%= pay_address %>" class="link-primary"><%= pay_address %></a></td>
-          </tr>
-          </tbody>
-        </table>
-        <p>When you have finished, continue to view your NFT asset: <%= link_to "Continue", base_item_url(@item), class: "btn btn-primary" %></p>
-      <% else %>
-        <p>It looks like you have already transferred gas fees for this! If you believe there has been a mistake, reach out to supporte@hoge.finance. Otherwise <%= link_to "continue", base_item_url(@item) %> to your NFT image.</p>
+        <p>If you have already started a payment, you can see the status below. If you believe there has been a mistake, reach out to supporte@hoge.finance.</p>
       <% end %>
+      <% unless payment_status["message"].present? %>
+        Payment underway!<br>
+        <div class="table-responsive mt-2">
+          <table class="table table-dark">
+            <tbody>
+            <tr>
+              <td>Status</td>
+              <td><%= payment_status["payment_status"].upcase %></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
+      <%= button_to "Mint Now", skip_payment_base_item_url(@item), class: "btn btn-primary" %>
     </div>
   </div>
 <% end %>

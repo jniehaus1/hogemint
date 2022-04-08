@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :test_items, only: [:new, :create, :show]
   resources :items,      only: [:show]
-  resources :base_items, only: [:new, :create, :show]
+  resources :base_items, only: [:new, :create, :show] do
+    member do
+      post :skip_payment
+    end
+  end
 
   # item URLs
   get '/uri/:id', to: 'items#uri', as: "item_uri"
