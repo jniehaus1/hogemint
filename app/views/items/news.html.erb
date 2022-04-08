@@ -1,0 +1,32 @@
+<h1>HogeMint - Under Maintenance</h1>
+<p class="lead">State Of Non-Fungible-Tokens:</p>
+<p>I've been trying like crazy to get all these NFTs minted but the gas cost ended up being $55/ea and there were 328 to print. You can do the math.</p>
+<div class="row">
+  <div class="col-sm-6">
+    <p class="lead">Current State:</p>
+    <ul>
+      <li>We have minted 185/328 NFTs thus far.</li>
+      <li>The NFT delivered to your wallet contains a URI (link) to one of 6 original images submitted by the community.</li>
+      <li>This was a bug in the Solidity code where the wrong memory type was used for a local variable.</li>
+      <li>Although your original image still exists, the NFT delivered most likely doesn't reference it.</li>
+      <li>Sweet rare misprints!</li>
+      <li>We want you to have your original image.</li>
+    </ul>
+    <p class="lead">Future Roadmap:</p>
+    <ul>
+      <li>Accept Hoge for Gas Fees => Mint your own NFT</li>
+      <li>Requires deploying a new smart contract</li>
+      <li>This new system will be Generation 2, The Reckoning.</li>
+    </ul>
+  </div>
+</div>
+<div class="row col-sm-12">
+  <%= image_tag "solidity_error.png" %>
+</div>
+<div class="row mt-2">
+  <div class="col-sm-8 text-justify">
+    <p>The error occured because every time the batchMint() function is called, new URIs are added to the array seen above,
+    and the array persists after the function ends. Therefore the local variable i keeps referencing the first 5 or 6 images (thats how many I mint at a time because of gas fees),
+    making the NFTs only ever refer to the first 5 or 6 made by the community. Whoops.</p>
+  </div>
+</div>

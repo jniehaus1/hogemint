@@ -10,6 +10,7 @@ class TestItemsController < ItemsController
   def new
     @item = TestItem.new
     @nonce = SecureRandom.uuid
+    render "items/news"
   end
 
   def create
