@@ -10,20 +10,22 @@
     </div>
   </div>
   <div id="card-information">
-    <div id="card-title"><%= @item.title %></div>
-    <div id="card-flavour-text"><%= @item.flavor_text %></div>
-    <div id="card-wallet">URI: <%= @item.uri %></div>
-    <div id="card-stats">
-      <div id="card-mint-date" class="card-stat" stat="<%= @item.created_at.strftime("%Y-%m-%d") %>">Mint Date: </div>
-      <div id="card-generation" class="card-stat" stat="<%= @item.generation.capitalize %>">Generation: </div>
-      <div><%= processing_html(@item) %></div>
-    </div>
-    <div>
-      <% if @item.can_remint? %>
-        <%= render "shared/remint_first_gen" %>
-      <% elsif (@sale.blank? || @sale.new?) && @item.generation == "two" %>
-        Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_checkout_url(@item) %> to check the status of your order.
-      <% end %>
+    <div class="card-information-inner">
+      <div id="card-title"><%= @item.title %></div>
+      <div id="card-flavour-text"><%= @item.flavor_text %></div>
+      <div id="card-wallet">URI: <%= @item.uri %></div>
+      <div id="card-stats">
+        <div id="card-mint-date" class="card-stat" stat="<%= @item.created_at.strftime("%Y-%m-%d") %>">Mint Date: </div>
+        <div id="card-generation" class="card-stat" stat="<%= @item.generation.capitalize %>">Generation: </div>
+        <div><%= processing_html(@item) %></div>
+      </div>
+      <div>
+        <% if @item.can_remint? %>
+          <%= render "shared/remint_first_gen" %>
+        <% elsif (@sale.blank? || @sale.new?) && @item.generation == "two" %>
+          Your transaction may not have gone through yet, click <%= link_to "Checkout", sales_checkout_url(@item) %> to check the status of your order.
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

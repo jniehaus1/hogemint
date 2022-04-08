@@ -1,70 +1,77 @@
-<div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
-<div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
-<% if @error_messages.blank? %>
-  <div class="row">
-    <div class="col-sm-6">
-      <p>Your meme trading card has been created!</p>
-      <p>To complete the process and have the Non-Fungible Token minted, you must provide gas to the mint.</p>
-      <%= image_tag meme_image_url(@item), alt: "<Can not display image>", class: "image meme_card" %>
-      <br>
-      <%= processing_html(@item) %>
-    </div>
-
-    <div class="col-sm-4">
-      <p>HogeMint uses NOWPayments to transfer ETH and pay for the gas to create your NFT.</p>
-      <p class="lead">Checkout Details</p>
-      <div class="table-responsive">
-        <table class="table table-dark">
-          <tbody>
-          <tr>
-            <td data-toggle="tooltip" data-placement="top" title="Gas price determined by Etherscan Gas Tracker">Gas Price</td>
-            <td><%= gas_price %> gwei</td>
-          </tr>
-          <tr>
-            <td>Mint Gas Amount</td>
-            <td><%= number_with_delimiter(ENV["MINT_GAS_LIMIT"], delimiter: ",") %> gas</td>
-          </tr>
-          <tr>
-            <td>Estimated Mint Fees</td>
-            <td>150,000 HOGE</td>
-          </tr>
-          <tr class="table-secondary">
-            <td>Cost</td>
-            <td><%= number_with_delimiter(mint_price, :delimiter => ',') %> HOGE</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <hr>
-      <p>Follow the link to complete your payment:</p>
-        <table class="table table-dark">
-          <tbody>
-          <tr class="table-secondary">
-            <td><a href="<%= pay_address %>" target="_blank" rel="noopener noreferrer"><%= pay_address %></a></td>
-          </tr>
-          </tbody>
-        </table>
-        <p>When you have finished, continue to view your NFT asset: <%= link_to "Continue", item_url(@item), class: "btn btn-primary" %></p>
-      <% if returning_checkout %>
-        <p>If you have already started a payment, you can see the status below. If you believe there has been a mistake, reach out to support@hoge.finance.</p>
-      <% end %>
-      <% unless payment_status["message"].present? %>
-        Payment underway!<br>
-        <div class="table-responsive mt-2">
-          <table class="table table-dark">
-            <tbody>
-            <tr>
-              <td>Status</td>
-              <td><%= payment_status["payment_status"].upcase %></td>
-            </tr>
-            </tbody>
-          </table>
+<div class="checkout-page">
+  <div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
+  <div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
+  <% if @error_messages.blank? %>
+    <div class="checkout-container">
+      <div class="checkout-container__card-side">
+        <div class="checkout-container__card-side__inner">
+          <h3>Your meme trading card has been created!</h3>
+          <p>To complete the process and have the Non-Fungible Token minted, you must provide gas to the mint.</p>
+          <%= image_tag meme_image_url(@item), alt: "<Can not display image>", class: "image meme_card" %>
+          <br>
+          <%= processing_html(@item) %>
         </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
+      </div>
 
+      <div class="checkout-container__information-side">
+        <div class="checkout-container__information-side__inner">
+          <p>HogeMint uses NOWPayments to transfer ETH and pay for the gas to create your NFT.</p>
+          <p class="lead">Checkout Details</p>
+          <div class="table-responsive">
+            <table class="table table-dark">
+              <tbody>
+              <tr>
+                <td data-toggle="tooltip" data-placement="top" title="Gas price determined by Etherscan Gas Tracker">Gas Price</td>
+                <td><%= gas_price %> gwei</td>
+              </tr>
+              <tr>
+                <td>Mint Gas Amount</td>
+                <td><%= number_with_delimiter(ENV["MINT_GAS_LIMIT"], delimiter: ",") %> gas</td>
+              </tr>
+              <tr>
+                <td>Estimated Mint Fees</td>
+                <td>150,000 HOGE</td>
+              </tr>
+              <tr class="table-secondary">
+                <td>Cost</td>
+                <td><%= number_with_delimiter(mint_price, :delimiter => ',') %> HOGE</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <hr>
+          <p>Follow the link to complete your payment:</p>
+            <table class="table table-dark">
+              <tbody>
+              <tr class="table-secondary">
+                <a href="<%= pay_address %>" target="_blank" rel="noopener noreferrer"><%= pay_address %></a>
+              </tr>
+              </tbody>
+            </table>
+            <p style="margin-bottom: 10px">When you have finished, continue to view your NFT asset: </p>
+            <%= link_to "Continue", item_url(@item), class: "btn btn-primary" %>
+          <% if returning_checkout %>
+            <p style="margin-top: 16px">If you have already started a payment, you can see the status below. If you believe there has been a mistake, reach out to support@hoge.finance.</p>
+          <% end %>
+          <% unless payment_status["message"].present? %>
+            Payment underway!<br>
+            <div class="table-responsive mt-2">
+              <table class="table table-dark">
+                <tbody>
+                <tr>
+                  <td>Status</td>
+                  <td><%= payment_status["payment_status"].upcase %></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+</div>
 <script>
   <% if @error_messages.present? %>
     $("#modal_errors").removeClass("d-none");
