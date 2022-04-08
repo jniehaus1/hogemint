@@ -20,6 +20,7 @@
 #  meme_card_file_size    :bigint
 #  meme_card_updated_at   :datetime
 #  generation             :integer
+#  is_flagged             :boolean
 #
 class Item < ApplicationRecord
   has_attached_file :image

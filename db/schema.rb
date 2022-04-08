@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 2021_06_02_015316) do
     t.bigint "meme_card_file_size"
     t.datetime "meme_card_updated_at"
     t.integer "generation"
+    t.boolean "is_flagged"
   end
 
   create_table "now_payments", force: :cascade do |t|
