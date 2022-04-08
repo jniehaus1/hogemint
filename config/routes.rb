@@ -8,7 +8,6 @@ Rails.application.routes.draw do
 
   # item URLs
   get '/uri/:id', to: 'items#uri', as: "item_uri"
-  get 'item/remint/:id', to: 'items#remint', as: "remint_item"
 
   get 'sales/checkout/:id', to: 'sales#checkout', as: 'sales_checkout'
   get 'sales/base_checkout/:id', to: 'sales#base_checkout', as: 'sales_base_checkout'

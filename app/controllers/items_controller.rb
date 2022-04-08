@@ -55,14 +55,6 @@ class ItemsController < ApplicationController
     @item = Item.find_by(id: params[:id])
   end
 
-  # Same flow as BaseItems#create
-  def remint
-    return nil unless ENV["ALLOW_REMINT"] == "true"
-    @item = Item.find_by(id: params[:id])
-
-    redirect_to sales_checkout_url(@item)
-  end
-
   private
 
   def uri_name(item)

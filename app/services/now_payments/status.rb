@@ -26,6 +26,8 @@ module NowPayments
 
     # https://documenter.getpostman.com/view/7907941/S1a32n38?version=latest#0b77a8e3-2344-4760-a0bd-247da067db6d
     def call
+      return { "message" => true } if @sale.payment_id.blank?
+      # Warning - broken right now because payment_id is never returned
       HTTParty.get("#{ENV["NP_API_URL"]}/v1/payment/#{@sale.payment_id}", {
           headers: headers
       })

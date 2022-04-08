@@ -1,11 +1,3 @@
 <p>Hogemint is offering people whose NFT was not properly created the first time an opportunity to re-mint. Click the following link to pay the gas fees and receive your original non-fungible token.</p>
-<p>Hogemint uses NowPayments as a payment processor, click below to receive your link.</p>
-<%= form_with(model: @item, url: remint_item_url, method: :get) do |f| %>
-  <div class="actions col-sm-12">
-    <%= f.submit "Generate Payment Link",
-                 class: "btn btn-primary",
-                 id: "submit-btn",
-                 autocomplete: "off" %>
-  </div>
-  <div id="payment_url" class="mt-2"></div>
-<% end %>
+<p>Hogemint uses NowPayments as a payment processor, click below to begin the process.</p>
+<%= link_to "Checkout", sales_checkout_url(@item), class: "btn btn-primary" %>

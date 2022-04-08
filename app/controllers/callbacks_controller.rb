@@ -60,6 +60,8 @@ class CallbacksController < ApplicationController
     sale = Sale.find_by(merchant_order_id: np_params[:order_id])
     return nil if sale.blank?
 
+    return invoice_sale(sale) if np_params[:payment_status] == "waiting" && sale.aasm_state == "new"
+
     # Move to canceled state
     return cancel_sale(sale) if ["failed", "refunded", "expired"].include?(np_params[:payment_status])
 
@@ -83,6 +85,11 @@ class CallbacksController < ApplicationController
 
   def cancel_sale(sale)
     sale.cancel!
+  end
+
+  def invoice_sale(sale)
+    sale.update(payment_id: np_params[:payment_id])
+    sale.invoice!
   end
 
   def coingate_params

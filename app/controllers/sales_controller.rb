@@ -35,11 +35,13 @@ class SalesController < ApplicationController
     @sale = Sale.create(sale_params(order_response))
     return render_failed_sale_create if @sale.errors.present?
 
-    render checkout_partial, locals: { pay_address: order_response["invoice_url"], gas_price: @gas_price, returning_checkout: false }
+    render checkout_partial, locals: { pay_address: order_response["invoice_url"], gas_price: @gas_price, returning_checkout: false, payment_status: { "message" => true } }
   end
 
   def return_checkout(checkout_partial)
-    render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: Etherscan::GasStation.gas_price, returning_checkout: true }
+    payment_status = NowPayments::Status.call(sale: @sale)
+
+    render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: Etherscan::GasStation.gas_price, returning_checkout: true, payment_status: payment_status }
   end
 
   def render_no_item

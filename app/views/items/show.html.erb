@@ -1,5 +1,6 @@
-
-<div id="message">Your NFT has been minted!</div>
+<% if @sale.done? %>
+  <div id="message">Your NFT has been minted!</div>
+<% end %>
 <div id="card-section">
   <div id="card-container">
     <div id="card-controller">
