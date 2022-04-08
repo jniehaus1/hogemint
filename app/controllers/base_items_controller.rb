@@ -18,6 +18,7 @@ class BaseItemsController < ApplicationController
     @base_item = BaseItem.new
   end
 
+  # Same flow as Items#remint
   def create
     @base_item = BaseItem.create(base_item_params)
     return render_new_with_errors if @base_item.errors.present?
@@ -28,7 +29,7 @@ class BaseItemsController < ApplicationController
     @sale = Sale.create(sale_params(order_response))
     return render_failed_sale_create if @sale.errors.present?
 
-    render "base_items/create", locals: { coingate_url: order_response.payment_url }
+    render "shared/coingate_link", locals: { coingate_url: order_response.payment_url }
   end
 
   def show

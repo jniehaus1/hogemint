@@ -22,9 +22,19 @@ module CoinGate
           :price_currency   => 'ETH',
           :receive_currency => 'ETH',
           :callback_url     => ENV["COINGATE_CALLBACK_URL"],
-          :success_url      => base_item_url(@item.id),
+          :success_url      => success_url,
           :cancel_url       => root_url
         }
+      end
+
+      def success_url
+        if @item.is_a?(Item)
+          item_url(@item.id)
+        elsif @item.is_a?(BaseItem)
+          base_item_url(@item.id)
+        else
+          nil
+        end
       end
     end
   end

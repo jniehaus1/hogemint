@@ -45,14 +45,45 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find_by(id: params[:id])
+    @item = Item.includes(:sales).find_by(id: params[:id])
+    @sale = @item.sales.first
   end
 
   def edit
     @item = Item.find_by(id: params[:id])
   end
 
+  # Same flow as BaseItems#create
+  def remint
+    @item = Item.find_by(id: params[:id])
+
+    order_response = CoinGate::Orders::Create.call(item: @item)
+    return render_failed_coingate_api if order_response.status != "new"
+
+    @sale = Sale.create(remint_params(order_response))
+    return render_failed_sale_create if @sale.errors.present?
+
+    render "shared/coingate_link.js.erb", locals: { coingate_url: order_response.payment_url }
+  end
+
   private
+
+  def remint_params(order_response)
+    { quantity:     1,
+      gas_for_mint: ENV["MINT_GAS_LIMIT"],
+      gas_price:    Etherscan::GasStation.gas_price,
+      token:        order_response.token,
+      nft_asset:    @item,
+      nft_owner:    @item.owner }
+  end
+
+  def render_failed_coingate_api
+    render "shared/modal_errors", locals: { error_messages: "Failed to create order in CoinGate API." }
+  end
+
+  def render_failed_sale_create
+    render "shared/modal_errors", locals: { error_messages: @sale.errors.full_messages }
+  end
 
   def item_params
     params.require(:item).permit(:image, :owner, :nonce, :signed_msg, :title, :flavor_text)

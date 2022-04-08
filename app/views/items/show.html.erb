@@ -1,4 +1,23 @@
 <h3>Save this image and URL to come back and view your digital asset</h3>
-<div class="viewport">
-  <%= image_tag @item.meme_card.url.sub("//","").gsub("#{ENV["AWS_S3_BUCKET"]}/",""), alt: "NOOOOOOO", class: "image" if @item.meme_card.present? %>
+<div class="row">
+  <div class="col-md-6">
+    <%= image_tag @item.meme_card.url.sub("//","").gsub("#{ENV["AWS_S3_BUCKET"]}/",""), alt: "NOOOOOOO", class: "image" if @item.meme_card.present? %>
+  </div>
+  <div class="col-md-6">
+    <% if @sale.blank? %>
+      <p>Hogemint is offering people whose NFT was not properly created the first time an opportunity to re-mint. Click the following link to pay the gas fees and receive your original non-fungible token.</p>
+      <p>Hogemint uses Coingate as a payment processor, click below to receive your link.</p>
+      <%= form_with(model: @item, url: remint_item_url, method: :get) do |f| %>
+        <div class="actions col-sm-12">
+          <%= f.submit "Generate Payment Link",
+                       class: "btn btn-primary",
+                       id: "submit-btn",
+                       autocomplete: "off" %>
+        </div>
+        <div id="payment_url">
+
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>

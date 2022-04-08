@@ -6,9 +6,15 @@ Rails.application.routes.draw do
   resources :items,      only: [:show]
   resources :base_items, only: [:new, :create, :show]
 
+  # item URLs
   get '/uri/:id', to: 'items#uri'
+  get 'item/remint/:id', to: 'items#remint', as: "remint_item"
+
+  # base_item URLs
   get  '/new_session', to: 'base_items#new_session'
   post '/login',       to: 'base_items#login'
+
+  # Static URLs
   get 'faq',      to: 'statics#faq'
   get 'guide',    to: 'statics#guide'
 
