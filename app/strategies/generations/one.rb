@@ -1,8 +1,6 @@
 module Generations
   class One
-    TEMPLATE  = "data/pics/template_nasa_neon.jpg".freeze
     MINT_ADDR = ENV["GEN_ONE_MINT_ADDRESS"].freeze
-
     MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
 
     def initialize(item:)

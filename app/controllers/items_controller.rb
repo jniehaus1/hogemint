@@ -55,6 +55,7 @@ class ItemsController < ApplicationController
 
   # Same flow as BaseItems#create
   def remint
+    return nil unless ENV["ALLOW_REMINT"] == "true"
     @item = Item.find_by(id: params[:id])
 
     order_response = CoinGate::Orders::Create.call(item: @item)

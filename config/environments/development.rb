@@ -59,6 +59,18 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  config.paperclip_defaults = {
+      storage: :s3,
+      s3_region: ENV["AWS_S3_REGION"],
+      s3_permissions: "public-read",
+      s3_credentials: {
+          s3_host_name: ENV["AWS_S3_HOST_NAME"],
+          bucket: ENV["AWS_S3_BUCKET"],
+          access_key_id: ENV["AWS_ACCESS_KEY_ID"],
+          secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"]
+      }
+  }
 end
 
 CoinGate.config do |config|

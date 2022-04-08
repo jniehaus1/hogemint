@@ -33,8 +33,7 @@ class Item < ApplicationRecord
   validate :printer_is_live
   validate :run_validations
 
-  before_create :generate_uri
-  after_create  :generate_meme_card
+  before_create :generate_uri, :generate_meme_card
 
   enum generation: {
       zero: 0,
@@ -56,7 +55,7 @@ class Item < ApplicationRecord
   end
 
   def generate_meme_card
-    generation_instance.new(item: self).generate_card
+    self.meme_card = generation_instance.new(item: self).generate_card
   end
 
   def run_validations
@@ -65,5 +64,9 @@ class Item < ApplicationRecord
 
   def generation_instance
     @generation_instance ||= "Generations::#{generation.classify}".constantize
+  end
+
+  def can_remint?
+    generation == "one" && Sale.find_by(nft_asset: self).blank?
   end
 end
