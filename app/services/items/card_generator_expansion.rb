@@ -25,7 +25,7 @@ module Items
       title_y_offset = 83
 
       title_container = Magick::Image.read("label:#{@item.title}") {
-        self.font = 'Times-New-Roman'
+        self.font = 'data/fonts/times-new-roman.ttf'
         self.stroke = 'transparent'
         self.fill   = '#FAFAFA'
         self.background_color = 'transparent'
@@ -43,7 +43,7 @@ module Items
       flavor_y_offset = 856
 
       flavor_container = Magick::Image.read("caption:#{@item.flavor_text}") {
-        self.font = 'Times-New-Roman'
+        self.font = 'data/fonts/times-new-roman.ttf'
         self.pointsize = 30
         self.stroke = 'transparent'
         self.fill   = '#FAFAFA'
@@ -61,7 +61,7 @@ module Items
       uri_y_offset = 1040
 
       uri_container = Magick::Image.read("caption:#{@item.uri}") {
-        self.font = 'Times-New-Roman'
+        self.font = 'data/fonts/times-new-roman.ttf'
         self.pointsize = 28
         self.stroke = 'transparent'
         self.fill   = '#FAFAFA'
