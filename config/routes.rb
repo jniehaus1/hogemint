@@ -3,7 +3,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :test_items, only: [:new, :create, :show]
-  resources :items,      only: [:show, :index]
+  resources :items,      only: [:show]
   resources :base_items, only: [:new, :create, :show] do
     member do
       post :skip_payment
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
   if ENV["PRINTER_IS_LIVE"] == 'true'
     root to: 'items#new'
+    get 'items', to: 'items#new'
     resources :items, only: [:new, :create]
   else
     root to: 'test_items#new'

@@ -1,6 +1,8 @@
 include ApplicationHelper
 
 class ItemsController < ApplicationController
+  before_action :empty_errors
+
   MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: "
 
   def index
@@ -68,8 +70,8 @@ class ItemsController < ApplicationController
   end
 
   def render_failed_item_create
-    flash[:item_errors] = @item.errors.full_messages
-    render "shared/modal_errors", locals: { error_messages: @item.errors.full_messages }
+    @error_messages = @item.errors.full_messages
+    render :new
   end
 
   def item_params
@@ -88,5 +90,9 @@ class ItemsController < ApplicationController
   def short_uri
     return nil unless params[:id].size >= 32
     params[:id][0..31] if params[:id].present?
+  end
+
+  def empty_errors
+    @error_messages = []
   end
 end

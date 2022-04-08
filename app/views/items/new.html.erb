@@ -4,7 +4,7 @@
 <div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
 <div class="row">
   <div class="col-sm-6">
-    <%= form_with(model: @item) do |f| %>
+    <%= form_with(model: @item, local: true) do |f| %>
       <div class="form-group">
         <div class="form-group row">
           <h4><%= f.label :owner, "Title" %></h4>
@@ -76,4 +76,14 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    <%# Your modal must contain an HTML <div id="modal_errors"> tag with a nested <ul> tag %>
+    $("#modal_errors ul li").remove();
+
+    <% if @error_messages.present? %>
+      <% @error_messages.each do |msg| %>
+        $("#modal_errors ul").append("<li> <%= msg %> </li>");
+      <% end %>
+      $("#modal_errors").removeClass("d-none");
+    <% end %>
 </script>
