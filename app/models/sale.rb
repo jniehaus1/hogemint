@@ -37,7 +37,7 @@ class Sale < ApplicationRecord
     end
 
     event :pay do
-      transitions from: :invoiced, to: :paid
+      transitions from: [:new, :invoiced], to: :paid
     end
 
     event :cancel do

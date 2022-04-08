@@ -48,7 +48,7 @@ module NowPayments
       {
         :price_amount     => mint_price,
         :price_currency   => 'HOGE',
-        :order_id         => "NP_FALSE_#{@item.order_id}",
+        :order_id         => "NP_#{@item.order_id}",
         :ipn_callback_url => ENV["NP_CALLBACK_URL"],
         :success_url      => success_url,
         :cancel_url       => root_url
@@ -95,7 +95,7 @@ module NowPayments
           "price_currency" => "hoge",
           "pay_currency" => nil,
           "ipn_callback_url" => "https://nowpayments.io",
-          "invoice_url" => "https://nowpayments.io/payment/?iid=4522625843",
+          "invoice_url" => "SANDBOX LINK: https://nowpayments.io/payment/?iid=4522625843",
           "success_url" => "https://nowpayments.io",
           "cancel_url"  => "https://nowpayments.io",
           "created_at"  => "2020-12-22T15:05:58.290Z",

@@ -28,13 +28,13 @@ class SalesController < ApplicationController
   end
 
   def new_checkout(checkout_partial)
-    @gas_price = Etherscan::GasStation.gas_price
-    return render_failed_etherscan_api if @gas_price.negative?
+    gas_price = Etherscan::GasStation.gas_price
+    return render_failed_etherscan_api if gas_price.negative?
 
-    order_response = NowPayments::CreateInvoice.call(item: @item, gas_price: @gas_price)
+    order_response = NowPayments::CreateInvoice.call(item: @item, gas_price: gas_price)
     return render_failed_api if order_response["message"].present?
 
-    @sale = Sale.create(sale_params(order_response))
+    @sale = Sale.create(sale_params(order_response, gas_price))
     return render_failed_sale_create unless @sale.persisted?
 
     render checkout_partial, locals: { pay_address:        order_response["invoice_url"],
@@ -46,7 +46,7 @@ class SalesController < ApplicationController
 
   def return_checkout(checkout_partial)
     payment_status = NowPayments::Status.call(sale: @sale)
-    fix_mint_price if @sale.mint_price == nil
+    fix_mint_price(@sale.gas_price) if @sale.mint_price == nil
 
     render checkout_partial, locals: { pay_address:        @sale.invoice_url,
                                        gas_price:          @sale.gas_price,
@@ -85,21 +85,21 @@ class SalesController < ApplicationController
 
   private
 
-  def sale_params(order_response)
+  def sale_params(order_response, gas_price)
     {
       nft_asset:    @item,
       nft_owner:    @item.owner,
       quantity:     1,
       gas_for_mint: ENV["MINT_GAS_LIMIT"],
-      gas_price:    @gas_price,
+      gas_price:    gas_price,
       mint_price:   order_response["price_amount"],
       invoice_url:  order_response["invoice_url"],
       merchant_order_id: now_payment_order_id(@item)
     }
   end
 
-  def fix_mint_price
-    eth = ENV["MINT_GAS_LIMIT"].to_i * @gas_price * 1e-9
+  def fix_mint_price(gas_price)
+    eth = ENV["MINT_GAS_LIMIT"].to_i * gas_price * 1e-9
     # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc
     usd_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{eth}&currency_from=eth&currency_to=usd", { headers: headers })
     gas_cost = usd_response["estimated_amount"].to_f

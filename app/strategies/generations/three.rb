@@ -1,6 +1,7 @@
 module Generations
   class Three
-    MINT_ADDR = ENV["GEN_TWO_MINT_ADDRESS"].freeze
+    MINT_ADDR = ENV["GEN_THREE_MINT_ADDRESS"].freeze
+    MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
 
     def initialize(item:)
       @item = item

@@ -41,7 +41,7 @@ class CallbacksController < ApplicationController
     return nil if NpReceipt.find_by(sale_id: sale.id)
 
     if np_params[:payment_status] == "finished"
-      sale.pay!
+      pay_sale(sale)
       receipt = NpReceipt.create(np_params.merge(sale_id: sale.id))
       if receipt.persisted?
         MintWorker.perform_async(sale.id, sale.nft_asset.generation)
@@ -53,51 +53,20 @@ class CallbacksController < ApplicationController
     head :no_content
   end
 
-  # https://developer.coingate.com/docs/payment-callback
-  def coingate
-    Rails.logger.info("Received coingate callback: #{params}")
-
-    return nil if params[:token].blank?
-
-    sale = Sale.find_by(token: params[:token])
-    return nil if sale.blank?
-
-    # No internal action to take
-    return nil if coingate_params[:status] == "pending" || coingate_params[:status] == "new"
-
-    # Move to canceled state
-    return cancel_sale(sale) if ["expired", "invalid", "canceled"].include?(coingate_params[:status])
-
-    # Coingate sometimes sends multiple "paid" callbacks.
-    return nil if CoinGateReceipt.find_by(sale_id: sale.id)
-
-    raise "Coingate callback shows status is not paid: #{coingate_params}" if coingate_params[:status] != "paid"
-
-    sale.pay!
-    receipt = CoinGateReceipt.create(coingate_params.merge(sale_id: sale.id))
-    if receipt.persisted?
-      MintWorker.perform_async(receipt.id, sale.nft_asset.generation)
-    else
-      raise "Could not create coingate receipt"
-    end
-
-    head :no_content
-  end
-
   private
 
   def cancel_sale(sale)
     sale.cancel!
   end
 
+  def pay_sale(sale)
+    sale.update(payment_id: np_params[:payment_id])
+    sale.pay!
+  end
+
   def invoice_sale(sale)
     sale.update(payment_id: np_params[:payment_id])
     sale.invoice!
-  end
-
-  def coingate_params
-    params.permit(:order_id, :status, :price_amount, :price_currency, :receive_currency, :receive_amount,
-                  :pay_amount, :pay_currency, :underpaid_amount, :overpaid_amount, :is_refundable, :remote_created_at)
   end
 
   def np_params

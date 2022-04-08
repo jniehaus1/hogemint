@@ -38,9 +38,8 @@ class Item < ApplicationRecord
   validates_attachment :image, presence: true, size: { less_than: 5.megabytes }
 
   validate :printer_is_live
-  validate :run_validations
 
-  before_create :generate_uri, :generate_meme_card
+  before_create :generate_uri, :run_validations, :generate_meme_card
   after_create  :run_after_create
 
   enum generation: {
