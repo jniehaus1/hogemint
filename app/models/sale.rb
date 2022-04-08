@@ -30,7 +30,7 @@ class Sale < ApplicationRecord
       transitions from: [:new, :unpaid], to: :paid
     end
 
-    event :cancel_payment do
+    event :cancel do
       transitions from: :new, to: :unpaid
     end
 

@@ -59,9 +59,10 @@ class BaseItemsController < ApplicationController
 
   def sale_params(order_response)
     { quantity:     1,
-      gas_for_mint: ENV[ "GAS_FOR_MINT"],
-      gas_price:    ENV["GAS_PRICE"],
+      gas_for_mint: ENV["MINT_GAS_LIMIT"],
+      gas_price:    Etherscan::GasStation.gas_price,
       token:        order_response.token,
-      nft_asset:    @base_item }
+      nft_asset:    @base_item,
+      nft_owner:    @base_item.owner }
   end
 end
