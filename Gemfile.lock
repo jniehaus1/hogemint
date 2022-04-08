@@ -240,6 +240,9 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
+    web3-eth (0.2.46)
+      digest-sha3 (~> 1.1.0)
+      rlp (~> 0.7.3)
     webpacker (5.2.1)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
@@ -279,6 +282,7 @@ DEPENDENCIES
   turbolinks (~> 5)
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
+  web3-eth
   webpacker
 
 RUBY VERSION

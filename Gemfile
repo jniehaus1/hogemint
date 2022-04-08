@@ -17,6 +17,7 @@ gem 'jquery-rails'
 gem 'webpacker'
 gem 'aws-sdk-s3'
 gem 'ethereum.rb'
+gem 'web3-eth'
 gem 'paperclip'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

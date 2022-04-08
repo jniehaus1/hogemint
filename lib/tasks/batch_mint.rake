@@ -8,9 +8,22 @@ namespace :hoge do
     validate_data(items)
 
     c = contract
-    items.each do |i|
+
+    puts "Owners:"
+    owners = items.map do |i|
       puts i.owner
+      i.owner
     end
+
+    puts "URIs:"
+    uris = items.map do |i|
+      puts i.uri[0..31]
+      i.uri[0..31]
+    end
+
+    puts "Minting"
+    
+    c.transact_and_wait.mint_batch(owners, uris)
   end
 
   def contract
@@ -31,7 +44,7 @@ namespace :hoge do
   end
 
   def client
-    @client ||= Ethereum::HttpClient.new("HTTP://127.0.0.1:7545")
+    @client ||= Ethereum::HttpClient.new(ENV["ETH_NODE"])
   end
 
   def validate_inputs
