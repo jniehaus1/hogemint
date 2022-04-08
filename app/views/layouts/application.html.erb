@@ -38,6 +38,11 @@
         <li class="nav-item mx-3">
           <%= link_to "Help", support_url, class: "nav-link" %>
         </li>
+        <% if user_signed_in? %>
+          <li class="nav-item mx-3">
+            <%= link_to "Admin Dashboard", admin_dashboard_url, class: "nav-link" %>
+          </li>
+        <% end %>
       </ul>
       <!--<form class="form-inline my-2 my-lg-0 clearfix">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

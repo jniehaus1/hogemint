@@ -31,6 +31,10 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { sessions: 'admin/sessions', passwords: 'admin/passwords' }, skip: [:registrations]
 
+  namespace :admin do
+    get 'dashboard', to: 'dashboards#dashboard'
+  end
+
   if ENV["PRINTER_IS_LIVE"] == 'true'
     root to: 'items#new'
     get 'items', to: 'items#new'
