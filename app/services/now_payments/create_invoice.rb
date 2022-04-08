@@ -47,7 +47,7 @@ module NowPayments
     def post_params
       {
         :price_amount     => mint_price,
-        :price_currency   => 'ETH',
+        :price_currency   => 'USD',
         :order_id         => "NP_ORDER_#{@item.order_id}",
         :ipn_callback_url => ENV["NP_CALLBACK_URL"],
         :success_url      => success_url,
@@ -63,10 +63,11 @@ module NowPayments
     # Upcharge: $30 USD
     def mint_price
       eth = (ENV["MINT_GAS_LIMIT"].to_i + ENV["NOWPAYMENTS_FEE"].to_i).to_f * @gas_price * 1e-9
+      usd = ENV["MINT_UPCHARGE"].to_f
 
       # https://api.nowpayments.io/v1/estimate?amount=3999.5000&currency_from=usd&currency_to=btc
-      eth_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{ENV["MINT_UPCHARGE"]}&currency_from=usd&currency_to=eth", { headers: headers })
-      eth_response["estimated_amount"].to_f + eth
+      usd_response = HTTParty.get("#{ENV["NP_API_URL"]}/v1/estimate?amount=#{eth}&currency_from=eth&currency_to=usd", { headers: headers })
+      usd_response["estimated_amount"].to_f + usd
     end
 
     def success_url

@@ -2,9 +2,9 @@ module Ipfs
   class Store
     include ApplicationService
 
-    def initialize(sale)
-      @sale = sale
-      @item = sale.nft_asset
+    def initialize(item, meme_image)
+      @item = item
+      @meme_image = meme_image
     end
 
     # Upload file to Pinata
@@ -13,21 +13,24 @@ module Ipfs
     # Update Item URI
     def call
       # ["IpfsHash", "PinSize", "Timestamp", "isDuplicate"]
-      response = Ipfs::Pinata.pin_file(base64_image)
-      raise("PINATA API ERROR: #{response["error"]} on SALE: #{sale.as_json}") if response["error"].present?
+      response = Ipfs::Pinata.pin_file(@meme_image)
+      raise("PINATA FILE API ERROR: #{response["error"]} on ITEM: #{@item.as_json}") if response["error"].present?
 
       json_response = Ipfs::Pinata.pin_json(uri_hash(response))
-      @item.update(ipfs_file_cid: response["IpfsHash"], ipfs_json_cid: json_response["IpfsHash"])
+      raise("PINATA URI API ERROR: #{json_response["error"]} on ITEM: #{@item.as_json}") if json_response["error"].present?
+
+      @item.update(ipfs_meme_file_cid: response["IpfsHash"], ipfs_meme_json_cid: json_response["IpfsHash"])
     end
 
     private
 
-    def base64_image
-      Paperclip.io_adapters.for(@item.meme_card).read
-    end
+    # def base64_image
+    #   Paperclip.io_adapters.for(@item.image).read
+    # end
 
+    # TODO - Add other fields
     def uri_hash(response)
-      Hash.new(image: "ipfs://#{response['IpfsHash']}")
+      { image: "ipfs://#{response['IpfsHash']}" }
     end
   end
 end

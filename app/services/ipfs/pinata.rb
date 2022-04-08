@@ -27,7 +27,7 @@ module Ipfs
 
       request.set_form form_data, 'multipart/form-data'
 
-      return https.request(request).read_body
+      return JSON.parse(https.request(request).read_body)
     ensure
       file.close
       file.unlink
@@ -50,9 +50,7 @@ module Ipfs
 
       request.body = uri_hash.to_json
 
-      return https.request(request).read_body
+      return JSON.parse(https.request(request).read_body)
     end
   end
 end
-
-# headers = {'pinata_api_key' => ENV["PINATA_API_KEY"], 'pinata_secret_api_key' => ENV["PINATA_API_SECRET"]}

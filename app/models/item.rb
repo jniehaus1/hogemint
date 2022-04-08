@@ -22,6 +22,8 @@
 #  generation             :integer
 #  is_flagged             :boolean
 #  processing             :boolean          default(TRUE)
+#  ipfs_file_cid          :string
+#  ipfs_json_cid          :string
 #
 class Item < ApplicationRecord
   attr_accessor :agreement
@@ -39,14 +41,15 @@ class Item < ApplicationRecord
 
   validate :printer_is_live
 
-  before_create :generate_uri, :run_validations, :generate_meme_card
+  before_create :generate_uri, :run_validations
   after_create  :run_after_create
 
   enum generation: {
       zero: 0,
       one:  1,
       two:  2,
-      three: 3
+      three: 3,
+      four: 4
   }
 
   attr_accessor :nonce, :signed_msg
@@ -84,6 +87,10 @@ class Item < ApplicationRecord
 
   def order_id
     "#{ENV["NP_LOCAL_POISON"]}ITEM_00_#{self.id}"
+  end
+
+  def has_ipfs?
+    ipfs_file_cid.present? || ipfs_json_cid.present?
   end
 
   def ipfs_url

@@ -32,6 +32,7 @@ class SalesController < ApplicationController
     return render_failed_etherscan_api if gas_price.negative?
 
     order_response = NowPayments::CreateInvoice.call(item: @item, gas_price: gas_price)
+
     return render_failed_api if order_response["message"].present?
 
     @sale = Sale.create(sale_params(order_response, gas_price))

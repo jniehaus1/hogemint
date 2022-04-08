@@ -16,7 +16,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
+    # @item = Item.find_by(owner: item_params[:owner], generation: ENV["CURRENT_GENERATION"])
 
     if @item.blank?
       @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
@@ -93,6 +93,10 @@ class ItemsController < ApplicationController
   def short_uri
     return nil unless params[:id].size >= 32
     params[:id][0..31] if params[:id].present?
+  end
+
+  def use_ipfs?
+    !(ENV["CURRENT_GENERATION"] == "one" || ENV["CURRENT_GENERATION"] == "two" || ENV["CURRENT_GENERATION"] == "three")
   end
 
   def empty_errors
