@@ -1,6 +1,6 @@
 <div class="col-sm-4">
   <div class="card">
-    <img class="card-img-top" src="<%= url_for item.meme_card.url if item.meme_card.present? %>">
+    <img class="card-img-top" src="<%= url_for item.meme_card.url.sub("//","").gsub("#{ENV["AWS_S3_BUCKET"]}/","") if item.meme_card.present? %>">
   </div>
   <div class="card-body text-center pb-1">
     <div class="w-100">
