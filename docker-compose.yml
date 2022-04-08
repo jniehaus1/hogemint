@@ -28,9 +28,11 @@ services:
     links:
       - db
       - redis
+      #- geth
     depends_on:
       - db
       - redis
+      #- geth
   redis:
     container_name: redis
     image: redis
@@ -56,7 +58,10 @@ services:
   #geth:
   #  container_name: geth
   #  image: ethereum/client-go
+  #  Main Chain:
   #  command: '--syncmode "light" --http --http.api=eth,web3,debug,txpool,admin --http.port=8545 --http.addr=0.0.0.0'
+  #  Rinkeby Chain:
+  #  command: ' --rinkeby --syncmode "light" --http --http.api=eth,web3,debug,txpool,admin --http.port=8545 --http.addr=0.0.0.0'
   #  ports:
   #    - '8545:8545'
   #  volumes:
