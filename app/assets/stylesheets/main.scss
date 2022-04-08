@@ -1,10 +1,11 @@
 // Place all the styles related to the Assets controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap');
 html {
   body {
     background-color: #0f0f11;
-    font-family: Inconsolata, monospace;
+    // font-family: Inconsolata, monospace;
     font-size: 18px;
     color: white;
     line-height: 1.2;
@@ -13,6 +14,23 @@ html {
   h1, h2, h3, h4, h5, h6, p {
     color: #f9f9f9;
   }
+
+  a {
+    color: #d6cd25;
+    transition: 0.3s ease;
+    &:hover {
+      color: #9c961b;
+    }
+  }
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Roboto', sans-serif;
+}
+
+p, ul, li, a {
+  font-family: 'Lato';
+
 }
 
 .nav-logo {
@@ -39,7 +57,7 @@ html {
   align-items: center;
   color: #e6cc80;
   display: flex;
-  font-family: 'Inconsolata';
+  // font-family: 'Inconsolata';
   font-size: 2rem;
   font-weight: 600;
   height: 5rem;
@@ -173,5 +191,170 @@ html {
   }
   #card-flavour-text {
     width: 100%;
+  }
+}
+
+
+// cupid torch added these
+
+.start-header {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.form-text {
+  display: flex;
+  flex-wrap: wrap;
+  &__form-container {
+    width: 50%;
+
+    &__inner {
+      padding: 30px 50px;
+      border: 4px solid #d6cd25;
+      border-radius: 20px;
+      background: #1b1b1b;
+    }
+
+    @media(max-width: 968px) {
+      width: 100%;
+    }
+  }
+
+  &__text-container {
+    width: 50%;
+
+    @media(max-width: 968px) {
+      width: 100%;
+      margin-top: 25px;
+    }
+
+    &__inner {
+      width: 80%;
+      @media(max-width: 968px) {
+        width: 100%;
+      }
+      margin: 0 auto;
+
+      .form-list-title {
+        font-size: 32px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #d6cd25;
+      }
+    
+      .form-list {
+        & li {
+          color: white;
+          font-size: 16px;
+          line-height: 20px;
+          margin-bottom: 10px;
+        }
+      }
+      
+      .discord-text {
+        font-size: 20px;
+      }
+
+    }
+  }
+}
+
+// faq page
+
+.faq-header {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.faq {
+  padding-bottom: 20px;
+}
+
+.faq-item {
+  padding: 20px;
+  border: 2px solid white;
+  h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #d6cd25;
+    cursor: pointer;
+    & svg {
+      width: 30px;
+      fill: white;
+      stroke: white;
+      transition: 0.5s ease;
+      transform: rotate(0);
+      &.active-faq-svg {
+        transform: rotate(-180deg);
+      }
+    }
+
+  }
+
+  & ul {
+    height: fit-content;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.5s ease;
+  }
+
+  .active-faq {
+    max-height: 1000px;
+  }
+}
+
+// guide page
+.guide-rows {
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  border-bottom: 1px solid #232329;
+  &:nth-child(odd) {
+    flex-direction: row-reverse;
+  }
+}
+
+.first-row {
+  padding-top: 50px;
+}
+
+.guide-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  & h2 {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #d6cd25;
+    text-align: center;
+  }
+}
+
+.guide-image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  & h4 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  & img {
+    max-height: 60vh;
+    width: fit-content;
+  }
+}
+
+// technical support page
+.technical-support-header {
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #d6cd25;
+}
+
+.technical-support {
+  & ul {
+    margin-left: 20px;
   }
 }

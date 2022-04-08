@@ -1,37 +1,65 @@
-<h1>Frequently Asked Questions</h1>
-<p class="lead">If you have any more questions stop by the telegram or discord and reach out!</p>
+<div class="faq-header">
+  <h1>Frequently Asked Questions.</h1>
+  <p class="lead">If you have any more questions stop by the telegram or discord and reach out!</p>
+</div>
 
-<ul class='text-white faq'>
-  <li>
-    How does the Non-Fungible Token work?
+<div class='text-white faq'>
+
+  <div class="faq-item">
+    <h3>How does the Non-Fungible Token work? <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+</svg></h3>
     <ul>
       <li>A Non-Fungible Token (NFT) is a unique asset added to the blockchain, such that there can only one of its kind. It is usually paired with some physical or digital asset.
         Think of it as a certificate of authenticity. The NFT says "I own this thing, and it is authentic." You can then transfer, sell, or destroy the token at your discretion.</li>
       <li>Tokens created with this printer have the ID, wallet address(thats you!), hash of the image submitted, and location of the image recorded with the token.</li>
       <li>So long as this server is running, both the image created and NFT from the blockchain can be paired so the public can know, That Meme is Mine!</li>
     </ul>
-  </li>
-  <li>
-    How much does it cost?
+  </div>
+  <div class="faq-item">
+    <h3>How much does it cost? <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+</svg></h3>
     <ul>
       <li>Cost to mint depends on the current ethereum gas fees and transaction costs to send the money to the mint.</li>
       <li>The smart contract uses approximately 210,000 gas per NFT, and about 4,000,000 gas to deploy initially.</li>
     </ul>
-  </li>
-  <li>
-    How do I see it on the blockchain?
+  </div>
+  <div class="faq-item">
+    <h3>How do I see it on the blockchain? <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+</svg></h3>
     <ul><li>Check etherscan!</li></ul>
-  </li>
-  <li>
-    Will it show up in my wallet?
+  </div>
+  <div class="faq-item">
+    <h3>Will it show up in my wallet? <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+</svg></h3>
     <ul><li>Yes, you'll have to add the contract address.</li></ul>
-  </li>
-  <li>
-    Whats the catch?
+  </div>
+  <div class="faq-item">
+    <h3>Whats the catch? <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+</svg></h3>
     <ul><li>There is none, thanks for helping the community grow!</li></ul>
-  </li>
-  <li>
-    What templates/formats are available?
+  </div>
+  <div class="faq-item">
+    <h3>What templates/formats are available? <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 15l-6 -6l-6 6h12" transform="rotate(180 12 12)" />
+</svg></h3>
     <ul><li>Check the <%= link_to "Guide to Printing", guide_url %> for updated information about the upcoming Minting Event!</li></ul>
-  </li>
-</ul>
+  </div>
+</div>
+
+<script>
+    $( ".faq-item h3" ).click(function() {
+      $(this).next().toggleClass('active-faq');
+      $(this).find('svg').toggleClass('active-faq-svg');
+    });
+</script>

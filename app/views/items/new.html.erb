@@ -1,66 +1,75 @@
-<h1>HogeMint</h1>
-<p class="lead">Do you want your one-time newly minted non-fungible token?</p>
+<div class="start-header">
+  <h1>HogeMint</h1>
+  <p class="lead">Do you want your one-time newly minted non-fungible token?</p>
+</div>
+
 <div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
 <div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
-<div class="row">
-  <div class="col-sm-6">
-    <%= form_with(model: @item, local: true) do |f| %>
-      <div class="form-group">
-        <div class="form-group row">
-          <h4><%= f.label :owner, "Title" %></h4>
-          <div class="col-sm-12">
-            <%= f.text_field :title, maxlength: 20, class: "form-control", placeholder: "" %>
+<div class="form-text">
+  <div class="form-text__form-container">
+    <div class="form-text__form-container__inner">
+      <%= form_with(model: @item, local: true) do |f| %>
+        <div class="form-group">
+          <div class="form-group row">
+            <h4><%= f.label :owner, "Title" %></h4>
+            <div class="col-sm-12">
+              <%= f.text_field :title, maxlength: 20, class: "form-control", placeholder: "" %>
+            </div>
+          </div>
+
+          <div class="form-group row my-3">
+            <h4><%= f.label :owner, "Flavor Text" %></h4>
+            <div class="col-sm-12">
+              <%= f.text_area :flavor_text, maxlength: 170, class: "form-control", placeholder: "" %>
+            </div>
+          </div>
+
+          <h4 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h4>
+
+          <img id="img_prev" src="#" alt="" class="img-preview" />
+          <div class="col-sm-12 my-1">
+            <%= f.file_field :image, class: "form-control", onChange: "readURL(this);" %>
           </div>
         </div>
 
         <div class="form-group row my-3">
-          <h4><%= f.label :owner, "Flavor Text" %></h4>
+          <h4><%= f.label :owner, "Asset Owner (your wallet)" %></h4>
           <div class="col-sm-12">
-            <%= f.text_area :flavor_text, maxlength: 170, class: "form-control", placeholder: "" %>
+            <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
           </div>
         </div>
 
-        <h4 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h4>
-
-        <img id="img_prev" src="#" alt="" class="img-preview" />
-        <div class="col-sm-12 my-1">
-          <%= f.file_field :image, class: "form-control", onChange: "readURL(this);" %>
+        <div class="form-group my-3">
+          <button type="button" id="sign_message-btn" class="btn btn-secondary">Sign Transaction!</button>
         </div>
-      </div>
-
-      <div class="form-group row my-3">
-        <h4><%= f.label :owner, "Asset Owner (your wallet)" %></h4>
-        <div class="col-sm-12">
-          <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
+        <%= f.hidden_field(:signed_msg) %>
+        <%= f.hidden_field(:nonce, value: @nonce) %>
+        <%= f.check_box :agreement %> I understand that I only get to submit ONE image, and that after clicking Submit there will be no more attempts to correct the resulting NFT. If I had wanted to practice, I would have gone to<br> <a href="https://hogemint-staging.herokuapp.com/" target="_blank">https://hogemint-staging.herokuapp.com/</a>
+        <div class="actions col-sm-12 mt-2">
+          <%= f.submit "Submit",
+                      class: "btn btn-primary",
+                      id: "submit-btn",
+                      disabled: true,
+                      autocomplete: "off" %>
+          <span class="text-secondary" id="text-warning"> **You must sign the transaction before submitting your image.</span>
         </div>
-      </div>
-
-      <div class="form-group my-3">
-        <button type="button" id="sign_message-btn" class="btn btn-secondary">Sign Transaction!</button>
-      </div>
-      <%= f.hidden_field(:signed_msg) %>
-      <%= f.hidden_field(:nonce, value: @nonce) %>
-      <%= f.check_box :agreement %> I understand that I only get to submit ONE image, and that after clicking Submit there will be no more attempts to correct the resulting NFT. If I had wanted to practice, I would have gone to<br> <a href="https://hogemint-staging.herokuapp.com/" target="_blank">https://hogemint-staging.herokuapp.com/</a>
-      <div class="actions col-sm-12 mt-2">
-        <%= f.submit "Submit",
-                     class: "btn btn-primary",
-                     id: "submit-btn",
-                     disabled: true,
-                     autocomplete: "off" %>
-        <span class="text-secondary" id="text-warning"> **You must sign the transaction before submitting your image.</span>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 
-  <div class="col-sm-6">
-    <div id="payment_url" class="mt-2"></div>
-    <p class="lead">Rules</p>
-    <p>-Upload a meme, and it will resized and pasted into the template shown <%= link_to "here", guide_url, class: "btn btn-primary" %>. Your title and flavor text will be auto appended.</p>
-    <p>-You must have held HOGE before the mint went live.</p>
-    <p>-You only get one.</p>
-    <p>-The printer is only live for 1 week.</p>
-    <br>
-    <p>Report problems on the Discord <a href="https://discord.gg/hoge"><%= image_tag "discord-512.webp", width:"50", height:"50", class: "discord" %></a></p>
+  <div class="form-text__text-container">
+    <div class="form-text__text-container__inner">
+      <div id="payment_url" class="mt-2"></div>
+      <p class="form-list-title">Rules</p>
+      <ul class="form-list">
+        <li>Upload a meme, and it will resized and pasted into the template shown <%= link_to "here", guide_url %>. Your title and flavor text will be auto appended.</li>
+        <li>You must have held HOGE before the mint went live.</li>
+        <li>You only get one.</li>
+        <li>The printer is only live for 1 week.</li>
+      </ul>
+        <p class="discord-text">Report problems on the Discord <a href="https://discord.gg/hoge"><%= image_tag "discord-512.webp", width:"50", height:"50", class: "discord" %></a></p>
+      
+    </div>
   </div>
 </div>
 
