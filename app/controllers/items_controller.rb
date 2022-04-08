@@ -34,7 +34,7 @@ class ItemsController < ApplicationController
                  end
 
     msg = {
-        "name": "Hoge Foundation NFT",
+        "name": uri_name(item),
         "image": image_link,
         "description": "Minted from the crucible of based memes."
     }
@@ -60,6 +60,16 @@ class ItemsController < ApplicationController
   end
 
   private
+
+  def uri_name(item)
+    if item.generation == "one"
+      "Hoge Foundation NFT"
+    elsif item.generation == "two"
+      "Hoge Expansion NFT"
+    else
+      "Hoge NFT"
+    end
+  end
 
   def render_failed_item_create
     flash[:item_errors] = @item.errors.full_messages
