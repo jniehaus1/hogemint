@@ -6,7 +6,10 @@ class MintWorker
     sale.mint! # Advance sale state
     nft_asset = sale.nft_asset
 
-    if generation == "three" || generation == "two"
+    if generation == "four"
+      NftPrinter::CreateGenFour.call(sale, mint_address(generation), private_key(generation))
+      sale.submit_tx!
+    elsif %w[two three].include?(generation)
       NftPrinter::Create.call(sale, mint_address(generation), private_key(generation))
       sale.submit_tx!
     elsif generation == "one"
@@ -14,7 +17,7 @@ class MintWorker
       sale.finish_minting!
     else
       sale.fail_minting!
-      raise "Cannot mint, not generation 1, 2, or 3."
+      raise "Cannot mint, not generation 1, 2, 3, or 4."
     end
   rescue Timeout::Error => e
     Rails.logger.error("Timed out minting sale #{sale.id}: #{e}")

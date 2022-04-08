@@ -35,7 +35,7 @@ class Item < ApplicationRecord
 
   has_many :sales, as: :nft_asset, dependent: :destroy
 
-  validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
+  # validates :owner, presence: true, format: { with: /[0][x]\h{40}/, message: "must be a valid wallet address" }
   validates :agreement, acceptance: true
 
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
@@ -43,7 +43,7 @@ class Item < ApplicationRecord
 
   validate :printer_is_live
 
-  before_create :generate_uri, :run_validations
+  before_create :generate_uri, :run_validations, :assign_owner
   after_create  :run_after_create
 
   enum generation: {
@@ -67,10 +67,6 @@ class Item < ApplicationRecord
     throw(:abort)
   end
 
-  def generate_meme_card
-    self.meme_card = generation_instance.new(item: self).generate_card
-  end
-
   def run_validations
     generation_instance.new(item: self).run_validations
   end
@@ -81,6 +77,20 @@ class Item < ApplicationRecord
 
   def generation_instance
     @generation_instance ||= "Generations::#{generation.classify}".constantize
+  end
+
+  def assign_owner
+    owner = key_owner
+  end
+
+  def key_owner
+    Eth::Utils.public_key_to_address(key_from_msg)
+  end
+
+  MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: ".freeze
+
+  def key_from_msg
+    Eth::Key.personal_recover(MSG_PREFIX + self.nonce, self.signed_msg)
   end
 
   def can_remint?

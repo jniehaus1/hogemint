@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_09_021525) do
+ActiveRecord::Schema.define(version: 2022_03_18_202306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 2022_03_09_021525) do
     t.string "ipfs_image_json_cid"
     t.string "ipfs_meme_file_cid"
     t.string "ipfs_meme_json_cid"
+    t.string "generated_gif_url"
   end
 
   create_table "now_payments", force: :cascade do |t|

@@ -10,7 +10,7 @@ class CallbacksController < ApplicationController
     item = sale.nft_asset
     msg = "This signature helps our server verify the transaction and attribute your nft. Unique Token: #{sale.nonce}"
 
-    raise "Transaction already attributed to sale" if PolygonReceipt.find_by(tx_hash: @tx_hash).present?
+    raise "Transaction already attributed to sale"    if PolygonReceipt.find_by(tx_hash: @tx_hash).present?
     raise "Signature & Transfer wallet do not match." if key_owner(msg, params[:signed_msg]).downcase != tx_from_wallet.downcase
     raise "Not enough quid" if tx_value < ENV["MATIC_FEES"].to_f * 1e18
     raise "Didn't send money to the right wallet" if tx_to_wallet.downcase != ENV["CUSTODIAL_WALLET"].downcase
@@ -25,6 +25,8 @@ class CallbacksController < ApplicationController
                            wallet:     tx_from_wallet)
     sale.pay!
     # MintWorker.perform_async(sale.id, item.generation)
+
+    head :no_content
   end
 
   # Example Callback:
@@ -99,7 +101,7 @@ class CallbacksController < ApplicationController
   end
 
   def tx_lookup
-    @tx_lookup ||= Polygonscan::TxArbiter.lookup(tx_hash: @tx_hash)
+    @tx_lookup ||= Alchemy::Transaction.lookup(tx_hash: @tx_hash)
   end
 
   def cancel_sale(sale)

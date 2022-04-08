@@ -4,9 +4,9 @@ module Ipfs
   class Store
     include ApplicationService
 
-    def initialize(item, meme_image)
+    def initialize(item, file_data)
       @item = item
-      @meme_image = meme_image
+      @file_data = file_data
     end
 
     # Upload file to Pinata
@@ -15,7 +15,7 @@ module Ipfs
     # Update Item URI
     def call
       # ["IpfsHash", "PinSize", "Timestamp", "isDuplicate"]
-      response = Ipfs::Pinata.pin_file(@meme_image)
+      response = Ipfs::Pinata.pin_file(@file_data)
       raise("PINATA FILE API ERROR: #{response["error"]} on ITEM: #{@item.as_json}") if response["error"].present?
 
       json_response = Ipfs::Pinata.pin_json(uri_hash(response))

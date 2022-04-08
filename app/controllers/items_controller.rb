@@ -66,7 +66,7 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:item).permit(:image, :owner, :nonce, :signed_msg, :title, :flavor_text, :agreement)
+    params.require(:item).permit(:image, :nonce, :signed_msg, :title, :flavor_text, :agreement)
   end
 
   def image_hash
