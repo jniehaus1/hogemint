@@ -74,7 +74,7 @@ class SalesController < ApplicationController
       gas_for_mint: ENV["MINT_GAS_LIMIT"],
       gas_price:    @gas_price,
       invoice_url:  order_response["invoice_url"],
-      merchant_order_id: @sale
+      merchant_order_id: "NP_ORDER_#{@item.order_id}"
     }
   end
 end

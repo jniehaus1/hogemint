@@ -70,7 +70,7 @@ class CallbacksController < ApplicationController
       sale.pay!
       receipt = NpReceipt.create(np_params.merge(sale_id: sale.id))
       if receipt.persisted?
-        MintWorker.perform_async(receipt.id, sale.nft_asset.generation)
+        MintWorker.perform_async(sale.id, sale.nft_asset.generation)
       else
         raise "Could not create NowPayment receipt"
       end
