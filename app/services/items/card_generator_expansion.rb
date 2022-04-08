@@ -22,7 +22,7 @@ module Items
       title_width = 469
       title_height = 70
       title_x_offset = 98
-      title_y_offset = 75
+      title_y_offset = 83
 
       title_container = Magick::Image.read("label:#{@item.title}") {
         self.font = 'Times-New-Roman'
@@ -30,6 +30,7 @@ module Items
         self.fill   = '#FAFAFA'
         self.background_color = 'transparent'
         self.size = "#{title_width}x#{title_height}"
+        self.gravity = Magick::WestGravity
       }.first
 
       im3.composite!(title_container, title_x_offset, title_y_offset, Magick::OverCompositeOp)
