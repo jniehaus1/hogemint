@@ -20,17 +20,15 @@ class BaseItemsController < ApplicationController
 
   def create
     @base_item = BaseItem.create(base_item_params)
+    return render_new_with_errors if @base_item.errors.present?
 
-    unless @base_item.persisted?
-      render :new
-    else
-      order_response = CoinGate::Orders::Create.call(item: @base_item)
-      if order_response.status == "new"
-        render "base_items/create", locals: { coingate_url: order_response.payment_url }
-      else
-        render  "base_items/fail"
-      end
-    end
+    order_response = CoinGate::Orders::Create.call(item: @base_item)
+    return render_failed_coingate_api if order_response.status != "new"
+
+    @sale = Sale.create(sale_params(order_response))
+    return render_failed_sale_create if @sale.errors.present?
+
+    render "base_items/create", locals: { coingate_url: order_response.payment_url }
   end
 
   def show
@@ -43,7 +41,29 @@ class BaseItemsController < ApplicationController
 
   private
 
+  def render_new_with_errors
+    # Attach errors
+    render :new
+  end
+
+  def render_failed_coingate_api
+    # Define errors
+    render "base_items/fail"
+  end
+
+  def render_failed_sale_create
+    # Attach errors
+    render :new
+  end
+
   def base_item_params
     params.require(:base_item).permit(:owner, :image)
+  end
+
+  def sale_params(order_response)
+    { quantity:     1,
+      gas_for_mint: ENV["GAS_FOR_MINT"],
+      gas_price:    ENV["GAS_PRICE"],
+      token:        order_response.token }
   end
 end

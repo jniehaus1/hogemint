@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_31_195320) do
+ActiveRecord::Schema.define(version: 2021_04_01_175954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,15 +48,19 @@ ActiveRecord::Schema.define(version: 2021_03_31_195320) do
   end
 
   create_table "coin_gate_receipts", force: :cascade do |t|
-    t.string "token"
+    t.string "invoice_id"
     t.string "status"
     t.string "price_currency"
     t.string "price_amount"
     t.string "receive_currency"
     t.string "receive_amount"
+    t.string "pay_amount"
+    t.string "pay_currency"
+    t.string "underpaid_amount"
+    t.string "overpaid_amount"
+    t.string "is_refundable"
     t.string "remote_created_at"
     t.string "order_id"
-    t.string "payment_url"
     t.integer "sale_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -99,6 +103,7 @@ ActiveRecord::Schema.define(version: 2021_03_31_195320) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "aasm_state"
   end
 
   create_table "test_items", force: :cascade do |t|
