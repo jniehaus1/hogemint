@@ -18,18 +18,12 @@ class BaseItemsController < ApplicationController
     @base_item = BaseItem.new
   end
 
-  # TODO - Move to behind devise wall and reconcile with sales#checkout
+  # TODO - Move to behind devise wall
   def create
     @base_item = BaseItem.create(base_item_params)
     return render_new_with_errors if @base_item.errors.present?
 
-    order_response = CoinGate::Orders::Create.call(item: @base_item)
-    return render_failed_coingate_api if order_response.status != "new"
-
-    @sale = Sale.create(sale_params(order_response))
-    return render_failed_sale_create if @sale.errors.present?
-
-    render "shared/coingate_link", locals: { coingate_url: order_response.payment_url }
+    redirect_to sales_base_checkout_url(@base_item)
   end
 
   def show
@@ -56,14 +50,5 @@ class BaseItemsController < ApplicationController
 
   def base_item_params
     params.require(:base_item).permit(:owner, :image)
-  end
-
-  def sale_params(order_response)
-    { quantity:     1,
-      gas_for_mint: ENV["MINT_GAS_LIMIT"],
-      gas_price:    Etherscan::GasStation.gas_price,
-      token:        order_response.token,
-      nft_asset:    @base_item,
-      nft_owner:    @base_item.owner }
   end
 end

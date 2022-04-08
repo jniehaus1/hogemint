@@ -22,6 +22,7 @@ class Sale < ApplicationRecord
   include AASM
 
   has_one    :coin_gate_receipt
+  has_one    :np_receipt
   belongs_to :nft_asset, polymorphic: true
 
   aasm do

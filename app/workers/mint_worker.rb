@@ -2,7 +2,7 @@ class MintWorker
   include Sidekiq::Worker
 
   def perform(receipt_id, generation)
-    receipt = CoinGateReceipt.find_by(id: receipt_id)
+    receipt = NpReceipt.find_by(id: receipt_id)
     sale = receipt.sale
     sale.mint! # Advance sale state
 

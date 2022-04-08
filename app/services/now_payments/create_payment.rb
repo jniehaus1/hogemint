@@ -39,25 +39,13 @@ module NowPayments
       { :price_amount     => 50,
         :price_currency   => 'USD',
         :pay_currency     => 'ETH',
-        :ipn_callback_url => ENV["NP_CALLBACK_URL"],
-        :success_url      => success_url,
-        :cancel_url       => root_url
+        :ipn_callback_url => ENV["NP_CALLBACK_URL"]
       }
     end
 
     def headers
       { "x-api-key"    => ENV["NP_SANDBOX_API_KEY"],
         'Content-Type' => 'application/json'}
-    end
-
-    def success_url
-      if @item.is_a?(Item)
-        item_url(@item.id)
-      elsif @item.is_a?(BaseItem)
-        base_item_url(@item.id)
-      else
-        nil
-      end
     end
   end
 end

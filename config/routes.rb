@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'item/remint/:id', to: 'items#remint', as: "remint_item"
 
   get 'sales/checkout/:id', to: 'sales#checkout', as: 'sales_checkout'
+  get 'sales/base_checkout/:id', to: 'sales#base_checkout', as: 'sales_base_checkout'
 
   # base_item URLs
   get  '/new_session', to: 'base_items#new_session'
@@ -20,7 +21,8 @@ Rails.application.routes.draw do
   get 'faq',      to: 'statics#faq'
   get 'guide',    to: 'statics#guide'
 
-  post 'coingate/callback', to: 'coingates#callback'
+  post 'callback/coingate', to: 'callbacks#coingate'
+  post 'callback/nowpayments', to: 'callbacks#now_payments'
 
   if ENV["PRINTER_IS_LIVE"] == 'true'
     root to: 'items#new'

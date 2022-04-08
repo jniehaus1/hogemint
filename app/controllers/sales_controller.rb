@@ -7,27 +7,41 @@ class SalesController < ApplicationController
     @error_messages = []
 
     if @sale.blank?
-      new_checkout
+      new_checkout("checkout")
     else
-      return_checkout
+      return_checkout("checkout")
     end
   end
 
-  def new_checkout
+  def base_checkout
+    @item = BaseItem.includes(:sales).find_by(id: params[:id])
+    return render_no_item unless @item.present?
+
+    @sale = @item.sales.first
+    @error_messages = []
+
+    if @sale.blank?
+      new_checkout("base_checkout")
+    else
+      return_checkout("base_checkout")
+    end
+  end
+
+  def new_checkout(checkout_partial)
     order_response = NowPayments::CreatePayment.call(item: @item)
     return render_failed_api if order_response["payment_status"] != "waiting"
 
     @sale = Sale.create(sale_params(order_response))
     return render_failed_sale_create if @sale.errors.present?
 
-    render "checkout", locals: { pay_address: order_response["pay_address"], gas_price: Etherscan::GasStation.gas_price, pay_status: "waiting" }
+    render checkout_partial, locals: { pay_address: order_response["pay_address"], gas_price: Etherscan::GasStation.gas_price, pay_status: "waiting" }
   end
 
-  def return_checkout
+  def return_checkout(checkout_partial)
     order_response = NowPayments::Status.call(sale: @sale)
 
     return render_failed_return if order_response["message"].present? # Nothing found or bad URL
-    render "checkout", locals: { pay_address: order_response["pay_address"], gas_price: Etherscan::GasStation.gas_price, pay_status: order_response["payment_status"] }
+    render checkout_partial, locals: { pay_address: order_response["pay_address"], gas_price: Etherscan::GasStation.gas_price, pay_status: order_response["payment_status"] }
   end
 
   def render_no_item

@@ -73,7 +73,7 @@ Rails.application.configure do
   }
 end
 
-CoinGate.config do |config|
-  config.auth_token  = ENV["COINGATE_SANDBOX_TOKEN"]
-  config.environment = 'sandbox' # live or sandbox. Default: live
-end
+# CoinGate.config do |config|
+#   config.auth_token  = ENV["COINGATE_SANDBOX_TOKEN"]
+#   config.environment = 'sandbox' # live or sandbox. Default: live
+# end
