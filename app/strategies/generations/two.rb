@@ -15,7 +15,7 @@ module Generations
     def run_validations
       # owner_matches_signed_msg
       # owner_is_unique
-      owner_has_hoge
+      # owner_has_hoge
       image_exists
     end
 

@@ -9,11 +9,11 @@ module Items
     def call
       image_binary = Paperclip.io_adapters.for(@item.image).read
       im = Magick::Image.from_blob(image_binary)
-      im = im[0].resize_to_fit(519,541) # Template size
-      im_template = Magick::Image.read("data/pics/template_expansion.jpg")
+      im = im[0].resize_to_fit(542,559) # Template size
+      im_template = Magick::Image.read("data/pics/template_expansion.png")
 
-      x_coord = ((519 - im.columns.to_i) / 2) + 104
-      y_coord = ((541 - im.rows.to_i) / 2) + 266
+      x_coord = ((542 - im.columns.to_i) / 2) + 104
+      y_coord = ((560 - im.rows.to_i) / 2) + 226
       im3 = im_template[0].composite(im, x_coord, y_coord, Magick::OverCompositeOp)
 
       ##
