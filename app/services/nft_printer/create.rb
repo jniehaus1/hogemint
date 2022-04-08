@@ -26,7 +26,7 @@ module NftPrinter
     end
 
     def build_contract
-      contract = Ethereum::Contract.create(name: "HogeNFTv2", address: @mint_address, abi: abi, client: client)
+      contract = Ethereum::Contract.create(name: "HogeNFTv3", address: @mint_address, abi: abi, client: client)
       contract.key = private_key
       contract
     end
@@ -36,7 +36,7 @@ module NftPrinter
     end
 
     def abi
-      f = File.read("data/eth/HogeNFTv2.json");
+      f = File.read("data/eth/HogeNFTv3.json");
       data_hash = JSON.parse(f);
       raise "Cannot find abi data from file" if data_hash["abi"].blank?
       data_hash["abi"]
