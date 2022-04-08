@@ -3,9 +3,9 @@ class TestItemsController < ItemsController
     "items"
   end
 
-  def index
-    @items = TestItem.all
-  end
+  # def index
+  #   @items = TestItem.all
+  # end
 
   def new
     @item = TestItem.new

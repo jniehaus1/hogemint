@@ -1,9 +1,9 @@
 class ItemsController < ApplicationController
   MSG_PREFIX = "We generated a token to prove that you're you! Sign with your account to protect your data. Unique Token: "
 
-  def index
-    @items = Item.all
-  end
+  # def index
+  #   @items = Item.all
+  # end
 
   def new
     @item = Item.new
