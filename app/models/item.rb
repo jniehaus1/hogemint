@@ -35,7 +35,7 @@ class Item < ApplicationRecord
   validates :agreement, acceptance: true
 
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
-  validates_attachment :image, presence: true, size: { less_than: 5.megabytes }
+  validates_attachment :image, presence: true, size: { less_than: 8.megabytes }
 
   validate :printer_is_live
 

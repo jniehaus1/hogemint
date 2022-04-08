@@ -59,7 +59,6 @@
 
   <div class="form-text__text-container">
     <div class="form-text__text-container__inner">
-      <div id="payment_url" class="mt-2"></div>
       <p class="form-list-title">Rules</p>
       <ul class="form-list">
         <li>Upload a meme, and it will resized and pasted into the template shown <%= link_to "here", guide_url %>. Your title and flavor text will be auto appended.</li>
@@ -69,6 +68,15 @@
       </ul>
         <p class="discord-text">Report problems on the Discord <a href="https://discord.gg/hoge"><%= image_tag "discord-512.webp", width:"50", height:"50", class: "discord" %></a></p>
       
+    </div>
+    <div class="form-text__text-container__inner">
+      <p class="form-list-title">Information</p>
+      <ul class="form-list">
+        <li>READ THE GUIDE TO PRINTING: <%= link_to "Guide", guide_url %></li>
+        <li>Check the Ethereum Network Gas Prices before clicking submit!</li>
+        <li>The cost of the mint varies with the network but will not change once you have started the checkout process.</li>
+        <li>Practice before you mint at: <%= link_to "https://hogemint-staging.herokuapp.com/", "https://hogemint-staging.herokuapp.com/" %></li>
+      </ul>
     </div>
   </div>
 </div>

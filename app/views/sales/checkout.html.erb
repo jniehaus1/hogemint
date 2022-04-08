@@ -5,8 +5,7 @@
     <div class="checkout-container">
       <div class="checkout-container__card-side">
         <div class="checkout-container__card-side__inner">
-          <h3>Your meme trading card has been created!</h3>
-          <p>To complete the process and have the Non-Fungible Token minted, you must provide gas to the mint.</p>
+          <h3 class="text-center">Your meme has been created!</h3>
           <%= image_tag meme_image_url(@item), alt: "<Can not display image>", class: "image meme_card" %>
           <br>
           <%= processing_html(@item) %>
@@ -15,7 +14,9 @@
 
       <div class="checkout-container__information-side">
         <div class="checkout-container__information-side__inner">
-          <p>HogeMint uses NOWPayments to transfer ETH and pay for the gas to create your NFT.</p>
+          <h4 class="text-center">**You are not done yet!**</h4>
+          <p>Add gas to the mint to have your NFT minted.</p>
+          <p>HogeMint uses NOWPayments to process transactions.</p>
           <p class="lead">Checkout Details</p>
           <div class="table-responsive">
             <table class="table table-dark">
