@@ -22,7 +22,7 @@ namespace :hoge do
     end
 
     puts "Minting"
-    
+
     c.transact_and_wait.mint_batch(owners, uris)
   end
 
@@ -44,7 +44,10 @@ namespace :hoge do
   end
 
   def client
-    @client ||= Ethereum::HttpClient.new(ENV["ETH_NODE"])
+    @client = Ethereum::HttpClient.new(ENV["ETH_NODE"])
+    @client.gas_limit = 1_000_000
+    @client.gas_price = 110_000_000_000
+    @client
   end
 
   def validate_inputs
