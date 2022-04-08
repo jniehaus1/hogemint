@@ -15,6 +15,8 @@ class MintWorker
     end
 
     sale.finish_minting!
+  rescue Timeout::Error => e
+    Rails.logger.error("Timed out minting sale #{sale.id}: #{e}")
   rescue StandardError => e
     sale.fail_minting! # Move to failed state
     raise e # Reraise

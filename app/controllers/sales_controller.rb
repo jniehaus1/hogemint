@@ -41,7 +41,7 @@ class SalesController < ApplicationController
   def return_checkout(checkout_partial)
     payment_status = NowPayments::Status.call(sale: @sale)
 
-    render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: Etherscan::GasStation.gas_price, returning_checkout: true, payment_status: payment_status }
+    render checkout_partial, locals: { pay_address: @sale.invoice_url, gas_price: @sale.gas_price, returning_checkout: true, payment_status: payment_status }
   end
 
   def render_no_item
