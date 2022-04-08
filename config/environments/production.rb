@@ -98,3 +98,8 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
+
+CoinGate.config do |config|
+  config.auth_token  = ENV["COINGATE_TOKEN"]
+  config.environment = ENV["COINGATE_ENV"] # live or sandbox. Default: live
+end
