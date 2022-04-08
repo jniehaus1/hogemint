@@ -3,17 +3,18 @@ class CoingatesController < ApplicationController
 
   # https://developer.coingate.com/docs/payment-callback
   def callback
-    Rails.logger.warn(params)
+    Rails.logger.info("Received coingate callback: #{params}")
+
     return nil if params[:token].blank?
 
     sale = Sale.find_by(token: params[:token])
     return nil if sale.blank?
 
     # No internal action to take
-    return Rails.logger.info("Received coingate callback: #{params}") if coingate_params[:status] == "pending" || coingate_params[:status] == "new"
+    return nil if coingate_params[:status] == "pending" || coingate_params[:status] == "new"
 
-    # Move to unpaid state
-    return cancel_sale(sale) if coingate_params[:status] == "canceled"
+    # Move to canceled state
+    return cancel_sale(sale) if ["expired", "invalid", "canceled"].include?(coingate_params[:status])
 
     # Coingate sometimes sends multiple "paid" callbacks.
     return nil if CoinGateReceipt.find_by(sale_id: sale.id)

@@ -1,0 +1,15 @@
+<div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
+<div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
+
+<% if @error_messages.blank? %>
+  <p>Your digital asset is hosted, but your NFT still needs gas to be created!</p>
+  <p>HogeMint uses CoinGate to transfer ETH and pay for the gas to create your NFT, click the link below to get your unique coingate link.</p>
+  <a href="<%= coingate_url %>">Click here to complete your payment on CoinGate</a>
+<% end %>
+
+<script>
+    <% @error_messages.each do |msg| %>
+      $("#modal_errors ul").append("<li> <%= msg %> </li>");
+    <% end %>
+    $("#modal_errors").removeClass("d-none");
+</script>

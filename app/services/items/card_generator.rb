@@ -94,8 +94,7 @@ module Items
       t.write(im3.to_blob)
       t.rewind
 
-      @item.meme_card = t
-      @item.save(validate: false)
+      t
     end
 
     private

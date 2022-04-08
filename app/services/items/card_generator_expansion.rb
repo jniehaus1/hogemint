@@ -7,7 +7,6 @@ module Items
     end
 
     def call
-      binding.pry
       image_binary = Paperclip.io_adapters.for(@item.image).read
       im = Magick::Image.from_blob(image_binary)
       im = im[0].resize_to_fit(519,541) # Template size

@@ -14,13 +14,11 @@ class ItemsController < ApplicationController
 
   def create
     @item = Item.new(item_params.merge(image_hash.merge({ generation: ENV["CURRENT_GENERATION"] })))
+    @item.save
 
-    if @item.save
-      redirect_to @item
-    else
-      flash[:item_errors] = @item.errors.full_messages
-      render "shared/modal_errors", locals: { error_messages: @item.errors.full_messages }
-    end
+    return render_failed_item_create unless @item.persisted?
+
+    redirect_to sales_checkout_url(@item)
   end
 
   def uri
@@ -58,32 +56,14 @@ class ItemsController < ApplicationController
     return nil unless ENV["ALLOW_REMINT"] == "true"
     @item = Item.find_by(id: params[:id])
 
-    order_response = CoinGate::Orders::Create.call(item: @item)
-    return render_failed_coingate_api if order_response.status != "new"
-
-    @sale = Sale.create(remint_params(order_response))
-    return render_failed_sale_create if @sale.errors.present?
-
-    render "shared/coingate_link.js.erb", locals: { coingate_url: order_response.payment_url }
+    redirect_to sales_checkout_url(@item)
   end
 
   private
 
-  def remint_params(order_response)
-    { quantity:     1,
-      gas_for_mint: ENV["MINT_GAS_LIMIT"],
-      gas_price:    Etherscan::GasStation.gas_price,
-      token:        order_response.token,
-      nft_asset:    @item,
-      nft_owner:    @item.owner }
-  end
-
-  def render_failed_coingate_api
-    render "shared/modal_errors", locals: { error_messages: "Failed to create order in CoinGate API." }
-  end
-
-  def render_failed_sale_create
-    render "shared/modal_errors", locals: { error_messages: @sale.errors.full_messages }
+  def render_failed_item_create
+    flash[:item_errors] = @item.errors.full_messages
+    render "shared/modal_errors", locals: { error_messages: @item.errors.full_messages }
   end
 
   def item_params

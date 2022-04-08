@@ -24,14 +24,16 @@ class Sale < ApplicationRecord
 
   aasm do
     state :new, initial: true
-    state :unpaid, :paid, :minting, :failed_to_mint, :done
+    state :canceled, :paid, :minting, :failed_to_mint, :done
 
     event :pay do
-      transitions from: [:new, :unpaid], to: :paid
+      transitions from: :new, to: :paid
     end
 
+    # https://developer.coingate.com/docs/order-statuses
+    # [invalid, expired, canceled] states
     event :cancel do
-      transitions from: :new, to: :unpaid
+      transitions from: :new, to: :canceled
     end
 
     event :mint do

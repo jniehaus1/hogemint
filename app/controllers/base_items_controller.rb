@@ -18,7 +18,7 @@ class BaseItemsController < ApplicationController
     @base_item = BaseItem.new
   end
 
-  # Same flow as Items#remint
+  # TODO - Move to behind devise wall and reconcile with sales#checkout
   def create
     @base_item = BaseItem.create(base_item_params)
     return render_new_with_errors if @base_item.errors.present?

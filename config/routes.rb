@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get '/uri/:id', to: 'items#uri'
   get 'item/remint/:id', to: 'items#remint', as: "remint_item"
 
+  get 'sales/checkout/:id', to: 'sales#checkout', as: 'sales_checkout'
+
   # base_item URLs
   get  '/new_session', to: 'base_items#new_session'
   post '/login',       to: 'base_items#login'

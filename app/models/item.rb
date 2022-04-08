@@ -69,4 +69,8 @@ class Item < ApplicationRecord
   def can_remint?
     generation == "one" && Sale.find_by(nft_asset: self).blank?
   end
+
+  def cg_order_id
+    "CG_ORDER_#{self.id}"
+  end
 end

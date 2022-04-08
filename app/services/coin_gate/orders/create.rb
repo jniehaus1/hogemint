@@ -17,7 +17,7 @@ module CoinGate
       private
 
       def post_params
-        { :order_id         => "CGORDER_#{@item.id}",
+        { :order_id         => "CGORDER_#{@item.cg_order_id}",
           :price_amount     => 0.75,
           :price_currency   => 'ETH',
           :receive_currency => 'ETH',

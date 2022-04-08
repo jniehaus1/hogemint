@@ -4,19 +4,10 @@
     <%= image_tag meme_image_url(@item), alt: "NOOOOOOO", class: "image" %>
   </div>
   <div class="col-md-6">
-    <% if @item.can_remint? && ENV["ALLOW_REMINT"]%>
-      <p>Hogemint is offering people whose NFT was not properly created the first time an opportunity to re-mint. Click the following link to pay the gas fees and receive your original non-fungible token.</p>
-      <p>Hogemint uses Coingate as a payment processor, click below to receive your link.</p>
-      <%= form_with(model: @item, url: remint_item_url, method: :get) do |f| %>
-        <div class="actions col-sm-12">
-          <%= f.submit "Generate Payment Link",
-                       class: "btn btn-primary",
-                       id: "submit-btn",
-                       autocomplete: "off" %>
-        </div>
-        <div id="payment_url mt-2">
-        </div>
-      <% end %>
+    <% if @item.can_remint? && ENV["ALLOW_REMINT"] %>
+      <%= render "shared/remint_first_gen" %>
+    <% elsif @sale.new? %>
+      Click here to provide the gas fees and get your NFT minted! <%= link_to "Checkout", sales_checkout_url(@item) %>
     <% end %>
   </div>
 </div>
