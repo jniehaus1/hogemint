@@ -80,7 +80,7 @@ module Items
 
       no_container = Magick::Image.read("caption:#{serial_no}") {
         self.font = 'data/fonts/nasalization-rg.ttf'
-        self.pointsize = 22
+        self.pointsize = 18
         self.stroke = 'transparent'
         self.fill   = '#FAFAFA'
         self.background_color = 'transparent'

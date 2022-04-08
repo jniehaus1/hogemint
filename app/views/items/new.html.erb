@@ -1,4 +1,4 @@
-<h1>HogeMint</h1>
+<h1>HogeMint - LIVE UNITL MARCH 7TH 00:00 EST</h1>
 <% unless ENV["PRINTER_IS_LIVE"] == "true" %>
   <h3>***Test Mode Engaged***</h3>
 <% end %>
@@ -6,18 +6,20 @@
   The certificate of authenticity will be added to the blockchain.</p>
 <div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
 <div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
+<div class="row">
+<div class="col-sm-6">
 <%= form_with(model: @item) do |f| %>
   <div class="form-group">
     <div class="form-group row">
       <h4><%= f.label :owner, "Title" %></h4>
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <%= f.text_field :title, maxlength: 20, class: "form-control", placeholder: "" %>
       </div>
     </div>
 
     <div class="form-group row my-3">
       <h4><%= f.label :owner, "Flavor Text" %></h4>
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <%= f.text_area :flavor_text, maxlength: 170, class: "form-control", placeholder: "" %>
       </div>
     </div>
@@ -25,14 +27,14 @@
     <h4 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h4>
 
     <img id="img_prev" src="#" alt="" class="img-preview" />
-    <div class="col-sm-6 my-1">
+    <div class="col-sm-12 my-1">
       <%= f.file_field :image, class: "form-control", onChange: "readURL(this);" %>
     </div>
   </div>
 
   <div class="form-group row my-3">
     <h4><%= f.label :owner, "Asset Owner" %></h4>
-    <div class="col-sm-6">
+    <div class="col-sm-12">
       <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
     </div>
   </div>
@@ -42,14 +44,31 @@
   </div>
   <%= f.hidden_field(:signed_msg) %>
   <%= f.hidden_field(:nonce, value: @nonce) %>
-  <div class="actions col-sm-8">
+  <div class="actions col-sm-12">
     <%= f.submit "Submit",
                  class: "btn btn-primary",
                  id: "submit-btn",
                  disabled: true,
-                 autocomplete: "off" %><span class="text-secondary" id="text-warning"> **You must sign the transaction before submitting your image.</span>
+                 autocomplete: "off" %>
+    <span class="text-secondary" id="text-warning"> **You must sign the transaction before submitting your image.</span>
   </div>
 <% end %>
+</div>
+
+  <div class="col-sm-6">
+    <p class="lead">Rules</p>
+    <p>-Upload a meme, and it will resized and pasted into the template shown <%= link_to "here", guide_url %>. Your title and flavor text will be auto appended.</p>
+    <p>-You must have held HOGE before the WhiteBIT launch.</p>
+    <p>-You only get one</p>
+    <p>-The trading card generated will continue to be hosted on this site, save the URL you are redirected to.</p>
+    <p>-The printer is only live for 24hours, and it is free.</p>
+    <p>-After 24hr, all trading cards will have an associated non-fungible token generated on the Ethereum blockchain.</p>
+    <p>-The token will be delivered to you within 48 hours.</p>
+    <p>-Congratulations, you are now the sole owner of the digital asset you just made.</p>
+    <br>
+    <p>Report problems on the Discord <a href="https://discord.gg/mHcQpe6qCs"><%= image_tag "discord-512.webp", width:"50", height:"50", class: "discord" %></a></p>
+  </div>
+</div>
 
 <!-- Assume jQuery is loaded -->
 <script>
