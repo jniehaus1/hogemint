@@ -13,7 +13,7 @@ class TestItemsController < ItemsController
   end
 
   def create
-    @item = TestItem.new(item_params.slice(:owner, :image, :signed_msg, :nonce))
+    @item = TestItem.new(item_params)
 
     if @item.save
       redirect_to @item
@@ -37,6 +37,6 @@ class TestItemsController < ItemsController
   private
 
   def item_params
-    params.require(:test_item).permit(:image, :owner, :nonce, :signed_msg)
+    params.require(:test_item).permit(:image, :owner, :nonce, :signed_msg, :title, :flavor_text)
   end
 end

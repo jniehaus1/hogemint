@@ -11,7 +11,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.new(item_params.slice(:owner, :image, :signed_msg, :nonce))
+    @item = Item.new(item_params)
 
     if @item.save
       redirect_to @item
@@ -36,6 +36,6 @@ class ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:item).permit(:image, :owner, :nonce, :signed_msg)
+    params.require(:item).permit(:image, :owner, :nonce, :signed_msg, :title, :flavor_text)
   end
 end

@@ -7,18 +7,33 @@
 <div id="modal_errors" class="alert alert-danger d-none"><ul></ul></div>
 <div id="modal_warnings" class="alert alert-warning d-none"><ul></ul></div>
 <%= form_with(model: @item) do |f| %>
-  <div class="form-group row">
-    <h2><%= f.label :owner, "Asset Owner" %></h2>
-    <div class="col-sm-6">
-      <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
+  <div class="form-group">
+    <div class="form-group row">
+      <h4><%= f.label :owner, "Title" %></h4>
+      <div class="col-sm-6">
+        <%= f.text_field :title, maxlength: 20, class: "form-control", placeholder: "" %>
+      </div>
+    </div>
+
+    <div class="form-group row my-3">
+      <h4><%= f.label :owner, "Flavor Text" %></h4>
+      <div class="col-sm-6">
+        <%= f.text_area :flavor_text, maxlength: 200, class: "form-control", placeholder: "" %>
+      </div>
+    </div>
+
+    <h4 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h4>
+
+    <img id="img_prev" src="#" alt="" class="img-preview" />
+    <div class="col-sm-6 my-1">
+      <%= f.file_field :image, class: "form-control", onChange: "readURL(this);" %>
     </div>
   </div>
 
-  <div class="form-group">
-    <h2 class="block-title mb-0 ml-0"><%= f.label :image, "Image" %></h2>
-    <img id="img_prev" src="#" alt="" class="img-preview" />
+  <div class="form-group row my-3">
+    <h4><%= f.label :owner, "Asset Owner" %></h4>
     <div class="col-sm-6">
-      <%= f.file_field :image, class: "form-control", onChange: "readURL(this);" %>
+      <%= f.text_area :owner, maxlength: 200, class: "form-control", placeholder: "(Paste your address here)" %>
     </div>
   </div>
 
@@ -27,7 +42,6 @@
   </div>
   <%= f.hidden_field(:signed_msg) %>
   <%= f.hidden_field(:nonce, value: @nonce) %>
-
   <div class="actions col-sm-8">
     <%= f.submit "Submit",
                  class: "btn btn-primary",

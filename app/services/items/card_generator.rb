@@ -15,23 +15,29 @@ module Items
       y_coord = ((566 - im.rows.to_i) / 2) + 218
       im3 = im_template[0].composite(im, x_coord, y_coord, Magick::OverCompositeOp)
 
-      title = Magick::Draw.new
+      ##
+      # nasa_neon_template
+      title_width = 469
+      title_height = 70
+      title_x_offset = 98
+      title_y_offset = 75
 
-      title.annotate(im3, 469,51,98,70, serial_no) {
-        self.font = 'data/fonts/Crashnumberinggothic-MAjp.ttf'
-        self.fill = 'white'
+      text_container = Magick::Image.read("label:#{@item.title}") {
+        self.font = 'Times-New-Roman'
         self.stroke = 'transparent'
-        self.pointsize = 60
-        self.font_weight = Magick::BoldWeight
-        self.gravity = Magick::NorthWestGravity
-      }
+        self.fill   = '#FAFAFA'
+        self.background_color = 'transparent'
+        self.size = "#{title_width}x#{title_height}"
+      }.first
+
+      im3.composite!(text_container, title_x_offset, title_y_offset, Magick::OverCompositeOp)
 
       t = Tempfile.new
       t.binmode
       t.write(im3.to_blob)
       t.rewind
 
-      @item.meme_card.attach(io: t, filename: "#{@item.uri}.jpg", content_type: "image/jpeg")
+      @item.meme_card.attach(io: t, filename: "#{@item.uri}.png", content_type: "image/png")
     end
 
     private
